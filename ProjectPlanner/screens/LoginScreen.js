@@ -1,12 +1,32 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { 
+  onAuthStateChanged,
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signInWithPopup, 
+  GoogleAuthProvider } from "firebase/auth";
+import { useNavigation } from '@react-navigation/native';
+
+let dateLogin;
 
 const LoginScreen = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.replace("Home")
+      }
+    })
+
+    return unsubscribe;
+  }, [])
 
   const handleSignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -24,6 +44,17 @@ const LoginScreen = () => {
         console.log('Logged in with: ', user.email);
       })
       .catch(error => alert(error.message))
+  }
+
+  const provider = new GoogleAuthProvider();
+
+  const googleAuth = () => {
+    dateLogin = new Date();
+    signInWithPopup(auth, provider)
+    .then((result) => {
+      const user = result.user;
+    })
+    .catch(error => alert(error.message))
   }
 
   return (
@@ -67,6 +98,15 @@ const LoginScreen = () => {
         >
           <Text style={styles.buttonOutlineText}>
             Register
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+        onPress={googleAuth}
+        style={[styles.button, styles.buttonOutline]}
+        >
+          <Text style={styles.buttonOutlineText}>
+            Google
           </Text>
         </TouchableOpacity>
 
