@@ -1,10 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { auth } from '../firebase'
 
 const AccountScreen = () => {
   return (
     <View>
-      <Text>accountScreen</Text>
+      <Text>Username:</Text>
+      <Text>Email: {auth.currentUser?.email} </Text>
+      <Text>Password: ********** </Text>
     </View>
   )
 }
