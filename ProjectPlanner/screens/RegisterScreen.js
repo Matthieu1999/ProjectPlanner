@@ -13,6 +13,7 @@ let dateLogin;
 
 const RegisterScreen = () => {
 
+    const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -55,6 +56,15 @@ const RegisterScreen = () => {
     >
 
       <View style={styles.inputContainer}>
+
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={text => setUsername(text)}
+        style={styles.input}
+        >
+        </TextInput>
+
         <TextInput
         placeholder="Email"
         value={email}
