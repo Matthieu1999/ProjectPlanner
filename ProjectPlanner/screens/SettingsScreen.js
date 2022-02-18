@@ -4,7 +4,8 @@ import React from 'react'
 const SettingsScreen = () => {
   return (
     <View>
-      <Text>SettingsScreen</Text>
+      <Text>Dark Mode</Text>
+      <Text>Push Notifications</Text>
     </View>
   )
 }
