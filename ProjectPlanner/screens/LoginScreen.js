@@ -28,15 +28,6 @@ const LoginScreen = () => {
     return unsubscribe;
   }, [])
 
-  const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Registered with: ', user.email);
-      })
-      .catch(error => alert(error.message))
-  }
-
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(userCredentials => {
@@ -93,7 +84,7 @@ const LoginScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-        onPress={handleSignUp}
+        onPress={() => navigation.navigate('Register')}
         style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>
