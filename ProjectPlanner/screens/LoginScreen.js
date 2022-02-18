@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase'
 import { 
   onAuthStateChanged,
-  createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   signInWithPopup, 
   GoogleAuthProvider } from "firebase/auth";
@@ -24,7 +23,7 @@ const LoginScreen = () => {
         navigation.navigate("Home")
       }
     })
-
+    
     return unsubscribe;
   }, [])
 
