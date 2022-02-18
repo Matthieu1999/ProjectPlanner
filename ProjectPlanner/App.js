@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,8 +12,10 @@ import AccountScreen from './screens/AccountScreen';
 import ProjectScreen from './screens/ProjectScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
+
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
+
 
 function MyDrawer() {
   return (
@@ -21,6 +23,12 @@ function MyDrawer() {
       <Drawer.Screen options={{
         headerTitleAlign: 'center',
         title:"Home",
+        headerRight: () => (
+          <Button
+          onPress = {('')}
+          title={'Sign out'}
+          />
+        )
       }} name="Root" component={HomeScreen} />
       <Drawer.Screen options={{
         headerTitleAlign: 'center',
@@ -41,7 +49,7 @@ export default function App() {
 
       <Stack.Navigator>
         <Stack.Screen options={{ headerShown: false}} name="Login" component={LoginScreen} />
-        <Stack.Screen options={{ headerShown: false}} name="Home" component={MyDrawer} />
+        <Stack.Screen options={{ headerShown: false }} name="Home" component={MyDrawer} />
       </Stack.Navigator>
 
     </NavigationContainer>
