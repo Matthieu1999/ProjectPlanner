@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 
 import { StatusBar } from 'expo-status-bar';
-import { Settings, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -20,7 +20,8 @@ function MyDrawer() {
     <Drawer.Navigator initialRouteName="Home">
       <Drawer.Screen options={{
         headerTitleAlign: 'center',
-      }} name="Home" component={HomeScreen} />
+        title:"Home",
+      }} name="Root" component={HomeScreen} />
       <Drawer.Screen options={{
         headerTitleAlign: 'center',
       }} name="Projects" component={ProjectScreen} />
