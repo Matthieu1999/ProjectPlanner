@@ -15,6 +15,7 @@ import RegisterScreen from './screens/RegisterScreen';
 
 import { auth } from './firebase'
 import { signOut } from 'firebase/auth'
+import FeedbackScreen from './screens/FeedbackScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -65,6 +66,16 @@ function MyDrawer() {
           />
         ),
       }} name="Account" component={AccountScreen} />
+
+      <Drawer.Screen options={{
+        headerTitleAlign: 'center',
+        headerRight: () => (
+          <Button
+          onPress = {(handleSignOut)}
+          title={'Sign out'}
+          />
+        ),
+      }} name="Feedback" component={FeedbackScreen} />
 
       <Drawer.Screen options={{
         headerTitleAlign: 'center',
