@@ -8,6 +8,8 @@ import {
   GoogleAuthProvider } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 
+import {MaterialIcons, Ionicons} from '@expo/vector-icons'
+
 let dateLogin;
 
 const LoginScreen = () => {
@@ -91,13 +93,18 @@ const LoginScreen = () => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        <TouchableOpacity 
         onPress={googleAuth}
         style={[styles.googleButton, styles.googleButtonOutline]}
         >
+          <View style={styles.buttonWithIcon}>
+          <Ionicons style={styles.icon} name="logo-google"/>
+          
           <Text style={styles.googleButtonOutlineText}>
             Continue with Google
           </Text>
+          </View>
+          
         </TouchableOpacity>
 
       </View>
@@ -170,6 +177,14 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: '700',
     fontSize: 16,
+  },
+  buttonWithIcon: {
+    flexDirection: 'row',
+    alignContent: 'space-around',
+  },
+  icon: {
+    fontSize: 20,
+    color: '#333',
   },
 
 })

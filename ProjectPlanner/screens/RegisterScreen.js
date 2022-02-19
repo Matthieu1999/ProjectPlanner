@@ -9,6 +9,8 @@ import {
   GoogleAuthProvider } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 
+import {Ionicons} from '@expo/vector-icons'
+
 let dateLogin;
 
 const RegisterScreen = () => {
@@ -98,9 +100,14 @@ const RegisterScreen = () => {
         onPress={googleAuth}
         style={[styles.googleButton, styles.googleButtonOutline]}
         >
+          <View style={styles.buttonWithIcon}>
+          <Ionicons style={styles.icon} name="logo-google"/>
+          
           <Text style={styles.googleButtonOutlineText}>
             Continue with Google
           </Text>
+          </View>
+          
         </TouchableOpacity>
 
       </View>
@@ -173,6 +180,13 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: '700',
     fontSize: 16,
+  },
+  buttonWithIcon: {
+    flexDirection: 'row',
+  },
+  icon: {
+    fontSize: 18,
+    color: '#333',
   },
 
 })
