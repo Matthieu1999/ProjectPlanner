@@ -90,16 +90,16 @@ const RegisterScreen = () => {
         style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>
-            Register
+            Sign up
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
         onPress={googleAuth}
-        style={[styles.button, styles.buttonOutline]}
+        style={[styles.googleButton, styles.googleButtonOutline]}
         >
-          <Text style={styles.buttonOutlineText}>
-            Google
+          <Text style={styles.googleButtonOutlineText}>
+            Continue with Google
           </Text>
         </TouchableOpacity>
 
@@ -153,6 +153,24 @@ const styles = StyleSheet.create({
   },
   buttonOutlineText: {
     color: 'blue',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  googleButton: {
+    backgroundColor: 'blue',
+    width: '150%',
+    padding: 15,
+    borderRadius: 50,
+    alignItems: 'center',
+  },
+  googleButtonOutline: {
+    backgroundColor: 'white',
+    marginTop: 50,
+    borderColor: 'grey',
+    borderWidth: 1,
+  },
+  googleButtonOutlineText: {
+    color: 'black',
     fontWeight: '700',
     fontSize: 16,
   },
