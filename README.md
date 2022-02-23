@@ -31,6 +31,7 @@
   - List steps
   - isDeleted
   - Status
+  - Completion %
 - **Step**
   - Name
   - Description
@@ -38,7 +39,6 @@
   - isDeleted
   - Owner (the one that added the step)
   - List Comments
-  - Completion %
   - Status
 - **Colors**
   - Red
