@@ -2,7 +2,7 @@
   "expo": {
     "name": "ProjectPlanner",
     "slug": "ProjectPlanner",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -11,7 +11,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/d0caab89-6404-4ee2-bb99-44ac93cb1f37"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -20,6 +21,7 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": "2",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +30,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "runtimeVersion": {
+      "policy": "nativeVersion"
     }
   }
 }
