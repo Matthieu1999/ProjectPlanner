@@ -22,7 +22,6 @@
     },
     "android": {
       "versionCode": 4,
-      "compileSdkVersion": 30,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
