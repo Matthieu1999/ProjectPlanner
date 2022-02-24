@@ -1,6 +1,6 @@
 {
   "name": "projectplanner",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -11,12 +11,11 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
-    "@react-native-community/google-signin": "^5.0.0",
-    "@react-native-google-signin/google-signin": "^7.1.0",
     "@react-navigation/drawer": "^6.3.1",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "expo": "~44.0.0",
+    "expo-dev-client": "~0.8.4",
     "expo-status-bar": "~1.2.0",
     "firebase": "^9.6.7",
     "react": "17.0.1",
@@ -28,8 +27,7 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-vector-icons": "^9.1.0",
-    "react-native-web": "0.17.1",
-    "expo-dev-client": "~0.8.4"
+    "react-native-web": "0.17.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
