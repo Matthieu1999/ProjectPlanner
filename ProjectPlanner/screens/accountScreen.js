@@ -13,6 +13,7 @@ const AccountScreen = () => {
   )
 }
 
+
 export default AccountScreen
 
 const styles = StyleSheet.create({})
