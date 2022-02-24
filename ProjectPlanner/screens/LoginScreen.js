@@ -2,13 +2,12 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase'
 import { 
-  onAuthStateChanged,
   signInWithEmailAndPassword, 
   signInWithPopup, 
   GoogleAuthProvider } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 
-import {MaterialIcons, Ionicons} from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 
 let dateLogin;
 
