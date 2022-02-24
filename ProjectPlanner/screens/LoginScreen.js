@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { Ionicons } from '@expo/vector-icons'
 
-let dateLogin;
+// let dateLogin;
 
 const LoginScreen = () => {
 
@@ -21,7 +21,7 @@ const LoginScreen = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        navigation.navigate("Home")
+        navigation.replace("Home")
       }
     })
 
@@ -40,10 +40,11 @@ const LoginScreen = () => {
   const provider = new GoogleAuthProvider();
 
   const googleAuth = () => {
-    dateLogin = new Date();
+    // dateLogin = new Date();
     signInWithPopup(auth, provider)
     .then((result) => {
       const user = result.user;
+      console.log('Logged in with: ', user.email);
     })
     .catch(error => alert(error.message))
   }

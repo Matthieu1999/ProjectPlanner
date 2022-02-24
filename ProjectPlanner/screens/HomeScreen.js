@@ -11,14 +11,21 @@ const HomeScreen = () => {
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
-        navigation.navigate("Login")
+        navigation.replace("Login")
       })
       .catch(error => alert(error.message))
   }
 
   return (
-    <View style={styles.container}>
-      
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity
+        onPress={handleSignOut}
+        style={styles.button}
+        >
+          <Text style={styles.buttonText}>
+            Sign out
+          </Text>
+        </TouchableOpacity>
     </View>
   )
 }
