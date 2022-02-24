@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { auth } from '../firebase'
+import { auth, app, db } from '../firebase'
 import { 
   signInWithEmailAndPassword,
   GoogleAuthProvider, 
@@ -35,6 +35,7 @@ const LoginScreen = () => {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Logged in with: ', user.email);
+        
       })
       .catch(error => alert(error.message))
   }
