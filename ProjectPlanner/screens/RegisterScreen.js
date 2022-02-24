@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase'
 import { 
   onAuthStateChanged,
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
   signInWithPopup, 
   GoogleAuthProvider } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
@@ -58,14 +57,6 @@ const RegisterScreen = () => {
     >
 
       <View style={styles.inputContainer}>
-
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={text => setUsername(text)}
-        style={styles.input}
-        >
-        </TextInput>
 
         <TextInput
         placeholder="Email"
