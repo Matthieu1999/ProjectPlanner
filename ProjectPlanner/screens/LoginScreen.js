@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase'
