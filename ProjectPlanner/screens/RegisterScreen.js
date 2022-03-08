@@ -41,24 +41,24 @@ const RegisterScreen = () => {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Registered with: ', user.email);
-        // createUserFirestore()
+        createUserFirestore(user.uid)
       })
       .catch(error => alert(error.message))
   }
 
-  // async function createUserFirestore(uid, user, userName) {
+  async function createUserFirestore(uid) {
 
-  //   try {
-  //     const docRef = await addDoc(collection(db, "users"), {
-  //       first: "Ada",
-  //       last: "Lovelace",
-  //       born: 1815
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // };
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        username: "",
+        email: email,
+        userId: uid,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
 
   const provider = new GoogleAuthProvider();
 
@@ -109,6 +109,7 @@ const RegisterScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
+        disabled={true}
         onPress={googleAuth}
         style={[styles.googleButton, styles.googleButtonOutline]}
         >
