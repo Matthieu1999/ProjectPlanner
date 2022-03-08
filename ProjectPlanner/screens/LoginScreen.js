@@ -118,7 +118,8 @@ const LoginScreen = () => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
+        disabled={true} 
         onPress={googleAuth}
         style={[styles.googleButton, styles.googleButtonOutline]}
         >
