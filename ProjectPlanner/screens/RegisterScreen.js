@@ -1,12 +1,17 @@
 import 'react-native-gesture-handler';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { auth } from '../firebase'
+
+import { auth, app, db } from '../firebase'
+import { collection, addDoc } from "firebase/firestore";
+
 import { 
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithPopup, 
-  GoogleAuthProvider } from "firebase/auth";
+  GoogleAuthProvider } 
+from "firebase/auth";
+
 import { useNavigation } from '@react-navigation/native';
 
 import {Ionicons} from '@expo/vector-icons'
@@ -15,7 +20,7 @@ let dateLogin;
 
 const RegisterScreen = () => {
 
-    const [username, setUsername] = useState('')
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -36,9 +41,24 @@ const RegisterScreen = () => {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Registered with: ', user.email);
+        createUserFirestore(user.uid)
       })
       .catch(error => alert(error.message))
   }
+
+  async function createUserFirestore(uid) {
+
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        username: "",
+        email: email,
+        userId: uid,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
 
   const provider = new GoogleAuthProvider();
 
@@ -89,6 +109,7 @@ const RegisterScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
+        disabled={true}
         onPress={googleAuth}
         style={[styles.googleButton, styles.googleButtonOutline]}
         >
