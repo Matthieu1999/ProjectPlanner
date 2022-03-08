@@ -38,17 +38,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // button: {
-  //   backgroundColor: 'blue',
-  //   width: '60%',
-  //   padding: 15,
-  //   borderRadius: 10,
-  //   alignItems: 'center',
-  //   marginTop: 40,
-  // },
-  // buttonText: {
-  //   color: 'white',
-  //   fontWeight: '700',
-  //   fontSize: 16,
-  // },
+  button: {
+    backgroundColor: 'blue',
+    width: '60%',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 16,
+  },
 })
