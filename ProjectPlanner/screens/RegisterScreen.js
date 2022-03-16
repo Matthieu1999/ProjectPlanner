@@ -49,8 +49,8 @@ const RegisterScreen = () => {
   async function createUserFirestore(uid) {
 
     try {
-      const docRef = await addDoc(collection(db, "users"), {
-        username: "",
+      const docRef = await addDoc(collection(db, "Users"), {
+        displayName: "",
         email: email,
         userId: uid,
       });
