@@ -28,15 +28,13 @@ const AccountScreen = () => {
 
   async function updateUsername() {
 
-    console.log(currentUser.uid)
-    console.log(currentUser.email)
-    console.log(userName)
+    // console.log(currentUser.uid)
+    // console.log(currentUser.email)
+    // console.log(userName)
 
     await updateDoc(doc(db, "Users", currentUser.email), {
       displayName:userName
-    });
-
-    
+    }); 
   };
 
   return (
