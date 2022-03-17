@@ -26,9 +26,9 @@ function MyDrawer() {
     
     <Drawer.Navigator>
       <Drawer.Screen options={{
-        headerTitle: 'Homepage',
+        headerTitle: 'Home',
         headerTitleAlign: 'center',
-      }} name="Home" component={HomeScreen} />
+      }} name="Homepage" component={HomeScreen} />
       <Drawer.Screen options={{
         headerTitleAlign: 'center',
       }} name="Projects" component={ProjectScreen} />
