@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Pressable, Modal, TextInput } from 'react-nativ
 import React, { useState, useEffect } from 'react'
 
 import { auth, db } from '../firebase'
-import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
+import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { onAuthStateChanged } from "firebase/auth";
 
 import { Button, FAB } from 'react-native-paper';
@@ -23,11 +23,15 @@ const ProjectScreen = () => {
   const [projectStatus, setProjectStatus] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
 
+
+  const [allProjects, setAllProjects] = useState([]);
+
   useEffect(() => {
 
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
         getCurrentUser();
+        // readProject();
       }
     });
   }, [])
@@ -39,7 +43,7 @@ const ProjectScreen = () => {
   }
 
   async function createProject() {
-    
+
     const newProject = await addDoc(collection(db, "Projects"), {
       ownerId: currentUser.uid,
       name: projectName,
@@ -53,13 +57,41 @@ const ProjectScreen = () => {
 
     });
     setModalVisible(false)
+  }
 
+  async function readProject() {
+
+    const getAllProjects = [];
+
+    const q = query(collection(db, "Projects"), where("ownerId", "==", currentUser.uid), where("isDeleted", "==", false));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    // console.log(doc.id, " => ", doc.data());
+    getAllProjects.push({ ...doc.data(), key: doc.id });
+    });
+    setAllProjects(getAllProjects);
   }
 
 
   return (
 
     <View style={styles.container}>
+
+      <View style={styles.project}>
+        {allProjects.map((project, index) => {
+                       return (
+                           <Text key= {index}>
+                             {
+                             
+                             
+                             }
+                           </Text>
+                       )
+        })}
+      </View>
+
 
       <Modal visible={modalVisible}>
         <View style={styles.modalContent}>
