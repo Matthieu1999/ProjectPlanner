@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import React, { useEffect, useState } from 'react'
 
 import { auth, app, db } from '../firebase'
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 
 import { 
   onAuthStateChanged,
@@ -40,7 +40,7 @@ const RegisterScreen = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
-        console.log('Registered with: ', user.email);
+        // console.log('Registered with: ', user.email);
         createUserFirestore(user.uid)
       })
       .catch(error => alert(error.message))
@@ -49,12 +49,9 @@ const RegisterScreen = () => {
   async function createUserFirestore(uid) {
 
     try {
-      const docRef = await addDoc(collection(db, "users"), {
-        username: "",
-        email: email,
+      await setDoc(doc(db, "Users", email), {
         userId: uid,
       });
-      console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
