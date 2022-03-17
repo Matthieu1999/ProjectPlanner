@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import { StyleSheet, Text, View, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { auth, db } from '../firebase'
-import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -29,23 +29,13 @@ const AccountScreen = () => {
   async function updateUsername() {
 
     console.log(currentUser.uid)
+    console.log(currentUser.email)
     console.log(userName)
 
-    const displayNameFirestore = query(collection(db, "Users"), where("userId", "==", "uYL0MWg9ONhdG7FaNEko9UsTcpp2"))
-
-    await updateDoc(displayNameFirestore, {
-      displayName: userName,
+    await updateDoc(doc(db, "Users", currentUser.email), {
+      displayName:userName
     });
 
-    // const userNameFirestore = await updateDoc(collection(db, "Users"), where("userId", "==", currentUser.uid)) 
-    // try {
-    //   userNameFirestore, {
-    //     displayName: userName,
-    //   }
-    //   console.log("Document written with ID: ", userNameFirestore.id);
-    // } catch (e) {
-    //   console.error("Error adding document: ", e);
-    // }
     
   };
 
