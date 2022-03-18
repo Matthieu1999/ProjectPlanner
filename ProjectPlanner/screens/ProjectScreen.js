@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, Pressable, Modal, TextInput } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Modal, FlatList, TextInput, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 
 import { auth, db } from '../firebase'
@@ -7,7 +7,6 @@ import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setD
 import { onAuthStateChanged } from "firebase/auth";
 
 import { Button, FAB } from 'react-native-paper';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {Picker} from '@react-native-picker/picker';
 
@@ -23,7 +22,6 @@ const ProjectScreen = () => {
   const [projectStatus, setProjectStatus] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
 
-
   const [allProjects, setAllProjects] = useState([]);
 
   useEffect(() => {
@@ -31,7 +29,7 @@ const ProjectScreen = () => {
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
         getCurrentUser();
-        // readProject();
+        readProject();
       }
     });
   }, [])
@@ -46,25 +44,26 @@ const ProjectScreen = () => {
 
     const newProject = await addDoc(collection(db, "Projects"), {
       ownerId: currentUser.uid,
-      name: projectName,
-      description: projectDescription,
+      projectName: projectName,
+      projectDescription: projectDescription,
       isDeleted: false,
-      category: projectCategory,
-      steps: [],
-      status: "To Do",
-      Deadline: "",
-      Completion: 0,
+      projectCategory: projectCategory,
+      projectSteps: [],
+      projectStatus: "To Do",
+      projectDeadline: "",
+      projectCompletion: 0,
 
     });
     setModalVisible(false)
+    setProjectName("")
+    setProjectDescription("")
+    readProject()
   }
 
   async function readProject() {
 
     const getAllProjects = [];
-
     const q = query(collection(db, "Projects"), where("ownerId", "==", currentUser.uid), where("isDeleted", "==", false));
-
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
@@ -74,23 +73,26 @@ const ProjectScreen = () => {
     setAllProjects(getAllProjects);
   }
 
-
+  const renderItem = ({ item }) => (
+    <TouchableOpacity style={styles.item}>
+      <Text>{item.projectName}</Text>
+      <Text>{item.projectDescription}</Text>
+      <Text>{item.projectStatus}</Text>
+      <Text>{item.projectCompletion}%</Text>
+    </TouchableOpacity>
+  );
+  
   return (
 
     <View style={styles.container}>
 
-      <View style={styles.project}>
-        {allProjects.map((project, index) => {
-                       return (
-                           <Text key= {index}>
-                             {
-                             
-                             
-                             }
-                           </Text>
-                       )
-        })}
-      </View>
+      <SafeAreaView style={styles.project}>
+        <FlatList
+        data={allProjects}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        />
+      </SafeAreaView>
 
 
       <Modal visible={modalVisible}>
@@ -148,14 +150,14 @@ const ProjectScreen = () => {
         </View>
       </Modal>
 
-      <FAB
+       <FAB
         style={styles.fab}
         medium
         icon="plus"
         color="white"
         theme={{ colors: { accent: '#1a75ff' } }}
         onPress={() => setModalVisible(true)}
-      />
+      /> 
     </View>
     
   )
@@ -221,6 +223,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
+  },
+
+
+  projectContainer: {
+    flex: 1,
+  },
+  item: {
+    backgroundColor: 'white',
+    color: "black",
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
 
 })
