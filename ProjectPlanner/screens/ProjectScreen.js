@@ -18,7 +18,7 @@ const ProjectScreen = () => {
 
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
-  const [projectCategory, setProjectCategory] = useState()
+  const [projectCategory, setProjectCategory] = useState('Personal')
   const [projectStatus, setProjectStatus] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
 
@@ -27,11 +27,16 @@ const ProjectScreen = () => {
   useEffect(() => {
 
     onAuthStateChanged(auth, (user) => {
-      if (user !== null) {
-        getCurrentUser();
-        readProject();
+      if (user) {
+        const loggedUserId = user.uid
+        // getCurrentUser()
+        setCurrentUser(loggedUserId);
+        readProject()
+        console.log("YOLO")
+
       }
     });
+
   }, [])
 
   async function getCurrentUser() {
@@ -43,7 +48,7 @@ const ProjectScreen = () => {
   async function createProject() {
 
     const newProject = await addDoc(collection(db, "Projects"), {
-      ownerId: currentUser.uid,
+      ownerId: currentUser,
       projectName: projectName,
       projectDescription: projectDescription,
       isDeleted: false,
@@ -63,7 +68,7 @@ const ProjectScreen = () => {
   async function readProject() {
 
     const getAllProjects = [];
-    const q = query(collection(db, "Projects"), where("ownerId", "==", currentUser.uid), where("isDeleted", "==", false));
+    const q = query(collection(db, "Projects"), where("ownerId", "==", currentUser), where("isDeleted", "==", false));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
@@ -74,14 +79,20 @@ const ProjectScreen = () => {
   }
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.item}>
-      <Text>{item.projectName}</Text>
-      <Text>{item.projectDescription}</Text>
-      <Text>{item.projectStatus}</Text>
-      <Text>{item.projectCompletion}%</Text>
-    </TouchableOpacity>
+    <View>
+      <TouchableOpacity style={styles.item}>
+        <View style={styles.projectUpper}>
+          <Text>{item.projectName}</Text>
+          <Text>{item.projectStatus}</Text>
+          {/* <Text>{item.projectDescription}</Text> */}
+        </View>
+        <View style={styles.projectUnder}>
+          <Text>{item.projectCompletion}%</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
-  
+
   return (
 
     <View style={styles.container}>
@@ -90,7 +101,7 @@ const ProjectScreen = () => {
         <FlatList
         data={allProjects}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.key}
         />
       </SafeAreaView>
 
@@ -229,12 +240,28 @@ const styles = StyleSheet.create({
   projectContainer: {
     flex: 1,
   },
+
+
+
+  // Firestore database read styles
+
   item: {
+    flex: 1,
     backgroundColor: 'white',
     color: "black",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    padding: 10,
+    marginVertical: 4,
+    marginHorizontal: 10,
+  },
+  projectUpper: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  projectUnder: {
+    flex: 1,
+    flexDirection: "row",
+    alignSelf: "flex-end",
   },
 
 })
