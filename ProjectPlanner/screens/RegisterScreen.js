@@ -23,6 +23,7 @@ const RegisterScreen = () => {
   
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [emailFirestore, setEmailFirestore] = useState('')
 
   const navigation = useNavigation()
 
@@ -49,7 +50,7 @@ const RegisterScreen = () => {
   async function createUserFirestore(uid) {
 
     try {
-      await setDoc(doc(db, "Users", email), {
+      await setDoc(doc(db, "Users", email.toLowerCase()), {
         userId: uid,
       });
     } catch (e) {
