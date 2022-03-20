@@ -15,9 +15,9 @@ const AccountScreen = () => {
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
         getCurrentUser();
-        updateUsername();
       }
     });
+    readUsername()
   }, [])
 
   async function getCurrentUser() {
@@ -52,6 +52,7 @@ const AccountScreen = () => {
     behavior="padding"
     >
       <View style={styles.usernameContainer}>
+
 
         <Text style={styles.itemText}>Username: </Text>
 
