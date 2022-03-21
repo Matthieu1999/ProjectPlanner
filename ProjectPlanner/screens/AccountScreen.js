@@ -10,15 +10,18 @@ const AccountScreen = () => {
 
   const [userName, setUserName] = useState('')
   const [currentUser, setCurrentUser] = useState(null)
+  const [email, setEmail] = useState('')
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user !== null) {
-        getCurrentUser();
+      if (user) {
+        getCurrentUser()
+        setEmail(user.email)
+        readUsername()
       }
     });
-    readUsername()
   }, [])
+  
 
   async function getCurrentUser() {
     if (auth.currentUser !== null) {
@@ -28,13 +31,13 @@ const AccountScreen = () => {
 
   async function updateUsername() {
 
-    await updateDoc(doc(db, "Users", currentUser.email), {
+    await updateDoc(doc(db, "Users", email), {
       displayName:userName
     }); 
   };
 
   async function readUsername() {
-    const docRef = doc(db, "Users", currentUser.email);
+    const docRef = doc(db, "Users", email);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
