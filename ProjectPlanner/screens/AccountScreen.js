@@ -12,12 +12,12 @@ const AccountScreen = () => {
   const [currentUser, setCurrentUser] = useState(null)
 
   useEffect(() => {
-
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
         getCurrentUser();
       }
     });
+    readUsername()
   }, [])
 
   async function getCurrentUser() {
@@ -28,22 +28,31 @@ const AccountScreen = () => {
 
   async function updateUsername() {
 
-    // console.log(currentUser.uid)
-    // console.log(currentUser.email)
-    // console.log(userName)
-
     await updateDoc(doc(db, "Users", currentUser.email), {
       displayName:userName
     }); 
   };
+
+  async function readUsername() {
+    const docRef = doc(db, "Users", currentUser.email);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setUserName(docSnap.data().displayName)
+    } 
+    else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
 
   return (
     <KeyboardAvoidingView
     style={styles.container}
     behavior="padding"
     >
-
       <View style={styles.usernameContainer}>
+
 
         <Text style={styles.itemText}>Username: </Text>
 
@@ -71,7 +80,6 @@ const AccountScreen = () => {
   )
 }
 
-
 export default AccountScreen
 
 const styles = StyleSheet.create({
@@ -91,6 +99,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 5,
   },
-
 
 })
