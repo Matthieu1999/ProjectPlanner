@@ -32,8 +32,6 @@ const ProjectScreen = () => {
         // getCurrentUser()
         setCurrentUser(loggedUserId);
         readProject()
-        console.log("YOLO")
-
       }
     });
 
