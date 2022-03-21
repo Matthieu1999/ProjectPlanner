@@ -248,9 +248,10 @@ const styles = StyleSheet.create({
   item: {
     flex: 1,
     backgroundColor: 'white',
+    borderRadius: 10,
     color: "black",
     padding: 10,
-    marginVertical: 4,
+    marginVertical: 2,
     marginHorizontal: 10,
   },
   projectUpper: {
