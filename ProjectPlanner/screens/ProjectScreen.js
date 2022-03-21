@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, Pressable, Modal, FlatList, TextInput, SafeAreaView, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Modal, FlatList, TextInput, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 
 import { auth, db } from '../firebase'
@@ -9,6 +9,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Button, FAB } from 'react-native-paper';
 
 import {Picker} from '@react-native-picker/picker';
+import {MaterialIcons} from '@expo/vector-icons'
 
 const ProjectScreen = () => {
 
@@ -21,6 +22,7 @@ const ProjectScreen = () => {
   const [projectCategory, setProjectCategory] = useState('Personal')
   const [projectStatus, setProjectStatus] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
+  const [projectColor, setProjectColor] = useState('')
 
   const [allProjects, setAllProjects] = useState([]);
 
@@ -37,11 +39,11 @@ const ProjectScreen = () => {
 
   }, [])
 
-  async function getCurrentUser() {
-    if (auth.currentUser !== null) {
-      setCurrentUser(auth.currentUser);
-    }
-  }
+  // async function getCurrentUser() {
+  //   if (auth.currentUser !== null) {
+  //     setCurrentUser(auth.currentUser);
+  //   }
+  // }
 
   async function createProject() {
 
@@ -55,6 +57,7 @@ const ProjectScreen = () => {
       projectStatus: "To Do",
       projectDeadline: "",
       projectCompletion: 0,
+      projectColor: projectColor,
 
     });
     setModalVisible(false)
@@ -76,17 +79,27 @@ const ProjectScreen = () => {
     setAllProjects(getAllProjects);
   }
 
+  // async function deleteProject() {
+
+  //   await updateDoc(doc(db, "Projects", email), {
+  //     isDeleted:true,
+  //   }); 
+  // }
+
   const renderItem = ({ item }) => (
-    <View>
-      <TouchableOpacity style={styles.item}>
+    <View style={styles.itemContainer}>
+      <TouchableOpacity style={styles.item}
+      backgroundColor="">
         <View style={styles.projectUpper}>
           <Text>{item.projectName}</Text>
           <Text>{item.projectStatus}</Text>
-          {/* <Text>{item.projectDescription}</Text> */}
         </View>
         <View style={styles.projectUnder}>
           <Text>{item.projectCompletion}%</Text>
         </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.itemRight}>
+      <MaterialIcons style={styles.icon} name="delete"/>
       </TouchableOpacity>
     </View>
   );
@@ -243,14 +256,29 @@ const styles = StyleSheet.create({
 
   // Firestore database read styles
 
+  itemContainer: {
+    flex: 1,
+    flexDirection: "row",
+  },
   item: {
     flex: 1,
     backgroundColor: 'white',
-    borderRadius: 10,
-    color: "black",
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
     padding: 10,
     marginVertical: 2,
-    marginHorizontal: 10,
+    marginLeft: 10,
+  },
+  itemRight: {
+    backgroundColor: '#ffb3b3',
+    width: "10%",
+    marginVertical: 2,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    marginRight: 10,
+    borderLeftWidth: 0.5,
+    alignItems: "center",
+    justifyContent: "center",
   },
   projectUpper: {
     flex: 1,
@@ -261,6 +289,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignSelf: "flex-end",
+  },
+
+  icon: {
+    fontSize: 25,
+    color: '#333',
+    flexDirection: "column",
   },
 
 })
