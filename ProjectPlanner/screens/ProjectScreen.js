@@ -9,20 +9,27 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Button, FAB } from 'react-native-paper';
 
 import {Picker} from '@react-native-picker/picker';
+import {MaterialIcons} from '@expo/vector-icons';
+
+
 
 const ProjectScreen = () => {
 
   const [currentUser, setCurrentUser] = useState(null)
 
-  const [modalVisible, setModalVisible] = useState(false)
+  const [modalCreateVisible, setModalCreateVisible] = useState(false)
+  const [modalProjectVisible, setModalProjectVisible] = useState(false)
 
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
   const [projectCategory, setProjectCategory] = useState('Personal')
   const [projectStatus, setProjectStatus] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
+  const [projectColor, setProjectColor] = useState('')
 
   const [allProjects, setAllProjects] = useState([]);
+
+  const [date, setDate] = useState(new Date())
 
   useEffect(() => {
 
@@ -37,11 +44,11 @@ const ProjectScreen = () => {
 
   }, [])
 
-  async function getCurrentUser() {
-    if (auth.currentUser !== null) {
-      setCurrentUser(auth.currentUser);
-    }
-  }
+  // async function getCurrentUser() {
+  //   if (auth.currentUser !== null) {
+  //     setCurrentUser(auth.currentUser);
+  //   }
+  // }
 
   async function createProject() {
 
@@ -55,9 +62,10 @@ const ProjectScreen = () => {
       projectStatus: "To Do",
       projectDeadline: "",
       projectCompletion: 0,
+      projectColor: projectColor,
 
     });
-    setModalVisible(false)
+    setModalCreateVisible(false)
     setProjectName("")
     setProjectDescription("")
     readProject()
@@ -76,23 +84,44 @@ const ProjectScreen = () => {
     setAllProjects(getAllProjects);
   }
 
+  async function readProjectPressed () {
+
+  }
+
+  // async function deleteProject() {
+
+  //   await updateDoc(doc(db, "Projects", email), {
+  //     isDeleted:true,
+  //   }); 
+  // }
+  
+
   const renderItem = ({ item }) => (
-    <View>
-      <TouchableOpacity style={styles.item}>
+    <View style={styles.itemContainer}>
+
+      <TouchableOpacity style={styles.item}
+      backgroundColor="">
+
         <View style={styles.projectUpper}>
           <Text>{item.projectName}</Text>
-          <Text>{item.projectStatus}</Text>
-          {/* <Text>{item.projectDescription}</Text> */}
+          <Text style={styles.projectStatus}>{item.projectStatus}</Text>
         </View>
+
         <View style={styles.projectUnder}>
+        
           <Text>{item.projectCompletion}%</Text>
         </View>
+        
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.itemRight}>
+      <MaterialIcons style={styles.icon} name="delete"/>
+      </TouchableOpacity>
+
     </View>
   );
 
   return (
-
     <View style={styles.container}>
 
       <SafeAreaView style={styles.project}>
@@ -104,33 +133,39 @@ const ProjectScreen = () => {
       </SafeAreaView>
 
 
-      <Modal visible={modalVisible}>
-        <View style={styles.modalContent}>
+      <Modal style={styles.modalContainer}
+      animationType="slide"
+      visible={modalCreateVisible}
+      >
+        <View style={styles.modalView}>
 
-          <View>
-            <View>
-              <Text>Project name</Text>
+          <View style={styles.completeView}>
+            <View style={styles.fieldViewOfModal}>
+              <Text style={styles.modalText}>Project name</Text>
               <TextInput
               placeholder="Name..."
               value={projectName}
               onChangeText={text => setProjectName(text)}
-              style={styles.input}
+              style={styles.inputText}
               ></TextInput>
             </View>
 
-            <View>
-              <Text>Project description</Text>
+            <View style={styles.fieldViewOfModal}>
+              <Text style={styles.modalText}>Project description</Text>
               <TextInput
+              multiline
+              numberOfLines={8}
               placeholder="Description..."
               value={projectDescription}
               onChangeText={text => setProjectDescription(text)}
-              style={styles.input}
+              style={styles.inputText}
               ></TextInput>
             </View>
 
-            <View>
-              <Text>Category</Text>
+            <View style={styles.fieldViewOfModal}>
+              <Text style={styles.modalText}>Category</Text>
               <Picker
+              style={styles.picker}
               selectedValue={projectCategory}
               onValueChange={(itemValue, itemIndex) => setProjectCategory(itemValue)}
               >
@@ -141,8 +176,6 @@ const ProjectScreen = () => {
             </View>
           </View>
           
-
-          
           <View style={styles.btnContainer}>
           <Button
             onPress={() => createProject()}
@@ -150,7 +183,7 @@ const ProjectScreen = () => {
               <Text>Add Project</Text>
             </Button>
             <Button
-            onPress={() => setModalVisible(false)}
+            onPress={() => setModalCreateVisible(false)}
             >
               <Text>Cancel</Text>
             </Button>
@@ -165,7 +198,7 @@ const ProjectScreen = () => {
         icon="plus"
         color="white"
         theme={{ colors: { accent: '#1a75ff' } }}
-        onPress={() => setModalVisible(true)}
+        onPress={() => setModalCreateVisible(true)}
       /> 
     </View>
     
@@ -176,81 +209,73 @@ export default ProjectScreen
 
 const styles = StyleSheet.create({
 
+  // Page content
   container: {
     flex: 1,
   },
+
+  // Modal content
+  modalContainer: {
+    flex: 1,
+    alignSelf: "center",
+  },
+  fieldViewOfModal: {
+    alignItems: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+  },
+  inputText: {
+    backgroundColor: '#f2f3f3',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginBottom: 20,
+    width: '80%',
+  },
+  picker: {
+    width: '50%',
+    alignContent: "center",
+  },
+
+  projectContainer: {
+    flex: 1,
+  },
+
+  // FAB styling
   fab: {
     position: 'absolute',
     margin: 16,
     right: 0,
     bottom: 0,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  },
-  input: {
-    backgroundColor: 'white',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 5,
-  },
-
-
-  projectContainer: {
-    flex: 1,
-  },
-
-
 
   // Firestore database read styles
-
+  itemContainer: {
+    flex: 1,
+    flexDirection: "row",
+  },
   item: {
     flex: 1,
     backgroundColor: 'white',
-    borderRadius: 10,
-    color: "black",
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
     padding: 10,
     marginVertical: 2,
-    marginHorizontal: 10,
+    marginLeft: 10,
+  },
+  itemRight: {
+    backgroundColor: '#ffb3b3',
+    width: "10%",
+    marginVertical: 2,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    marginRight: 10,
+    borderLeftWidth: 0.5,
+    alignItems: "center",
+    justifyContent: "center",
   },
   projectUpper: {
     flex: 1,
@@ -261,6 +286,20 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignSelf: "flex-end",
+  },
+  projectStatus: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 25,
+    color: "#cc0000",
+    borderColor: '#cc0000',
+    borderWidth: 2,
+  },
+
+  icon: {
+    fontSize: 25,
+    color: '#333',
+    flexDirection: "column",
   },
 
 })
