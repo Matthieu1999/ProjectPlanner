@@ -17,8 +17,9 @@
 ---
 ## Data structure
 - **Users**
-  - userId
-  - userName
+  - email as ID
+    - UserId
+    - displayName
 - **Project**
   - Name
   - Description
