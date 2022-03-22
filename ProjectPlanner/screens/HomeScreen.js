@@ -18,14 +18,14 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.buttonContainer}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={handleSignOut}
         style={styles.button}
         >
           <Text style={styles.buttonText}>
             Sign out
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
     </View>
   )
 }
