@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, Pressable, Modal, FlatList, TextInput, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Modal, FlatList, TextInput, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 
 import { auth, db } from '../firebase'
@@ -9,7 +9,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Button, FAB } from 'react-native-paper';
 
 import {Picker} from '@react-native-picker/picker';
-import {MaterialIcons} from '@expo/vector-icons'
+import {MaterialIcons} from '@expo/vector-icons';
+
+import DatePicker from 'react-native-date-picker'
+
 
 const ProjectScreen = () => {
 
@@ -25,6 +28,8 @@ const ProjectScreen = () => {
   const [projectColor, setProjectColor] = useState('')
 
   const [allProjects, setAllProjects] = useState([]);
+
+  const [date, setDate] = useState(new Date())
 
   useEffect(() => {
 
@@ -85,27 +90,34 @@ const ProjectScreen = () => {
   //     isDeleted:true,
   //   }); 
   // }
+  
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
+
       <TouchableOpacity style={styles.item}
       backgroundColor="">
+
         <View style={styles.projectUpper}>
           <Text>{item.projectName}</Text>
-          <Text>{item.projectStatus}</Text>
+          <Text style={styles.projectStatus}>{item.projectStatus}</Text>
         </View>
+
         <View style={styles.projectUnder}>
+        
           <Text>{item.projectCompletion}%</Text>
         </View>
+        
       </TouchableOpacity>
+
       <TouchableOpacity style={styles.itemRight}>
       <MaterialIcons style={styles.icon} name="delete"/>
       </TouchableOpacity>
+
     </View>
   );
 
   return (
-
     <View style={styles.container}>
 
       <SafeAreaView style={styles.project}>
@@ -117,32 +129,37 @@ const ProjectScreen = () => {
       </SafeAreaView>
 
 
-      <Modal visible={modalVisible}>
-        <View style={styles.modalContent}>
+      <Modal style={styles.modalContainer}
+      animationType="slide"
+      visible={modalVisible}
+      >
+        <View style={styles.modalView}>
 
-          <View>
-            <View>
-              <Text>Project name</Text>
+          <View style={styles.completeView}>
+            <View style={styles.fieldViewOfModal}>
+              <Text style={styles.modalText}>Project name</Text>
               <TextInput
               placeholder="Name..."
               value={projectName}
               onChangeText={text => setProjectName(text)}
-              style={styles.input}
+              style={styles.inputText}
               ></TextInput>
             </View>
 
-            <View>
-              <Text>Project description</Text>
+            <View style={styles.fieldViewOfModal}>
+              <Text style={styles.modalText}>Project description</Text>
               <TextInput
+              multiline
+              numberOfLines={8}
               placeholder="Description..."
               value={projectDescription}
               onChangeText={text => setProjectDescription(text)}
-              style={styles.input}
+              style={styles.inputText}
               ></TextInput>
             </View>
 
             <View>
-              <Text>Category</Text>
+              <Text style={styles.modalText}>Category</Text>
               <Picker
               selectedValue={projectCategory}
               onValueChange={(itemValue, itemIndex) => setProjectCategory(itemValue)}
@@ -152,6 +169,10 @@ const ProjectScreen = () => {
               <Picker.Item label="Work" value="Work" />
               </Picker>
             </View>
+
+            {/* <View>
+              <DatePicker date={date} onDateChange={setDate} />
+            </View> */}
           </View>
           
 
@@ -189,73 +210,45 @@ export default ProjectScreen
 
 const styles = StyleSheet.create({
 
+  // Page content
   container: {
     flex: 1,
   },
+
+  // Modal content
+  modalContainer: {
+    flex: 1,
+    alignSelf: "center",
+  },
+  fieldViewOfModal: {
+    alignItems: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  inputText: {
+    backgroundColor: '#f2f3f3',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginBottom: 20,
+    width: '80%',
+  },
+
+  projectContainer: {
+    flex: 1,
+  },
+
+  // FAB styling
   fab: {
     position: 'absolute',
     margin: 16,
     right: 0,
     bottom: 0,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  },
-  input: {
-    backgroundColor: 'white',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 5,
-  },
-
-
-  projectContainer: {
-    flex: 1,
-  },
-
-
 
   // Firestore database read styles
-
   itemContainer: {
     flex: 1,
     flexDirection: "row",
@@ -289,6 +282,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignSelf: "flex-end",
+  },
+  projectStatus: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 25,
+    color: "#cc0000",
+    borderColor: '#cc0000',
+    borderWidth: 2,
   },
 
   icon: {
