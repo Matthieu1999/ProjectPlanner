@@ -11,14 +11,14 @@ import { Button, FAB } from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import {MaterialIcons} from '@expo/vector-icons';
 
-import DatePicker from 'react-native-date-picker'
 
 
 const ProjectScreen = () => {
 
   const [currentUser, setCurrentUser] = useState(null)
 
-  const [modalVisible, setModalVisible] = useState(false)
+  const [modalCreateVisible, setModalCreateVisible] = useState(false)
+  const [modalProjectVisible, setModalProjectVisible] = useState(false)
 
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
@@ -65,7 +65,7 @@ const ProjectScreen = () => {
       projectColor: projectColor,
 
     });
-    setModalVisible(false)
+    setModalCreateVisible(false)
     setProjectName("")
     setProjectDescription("")
     readProject()
@@ -82,6 +82,10 @@ const ProjectScreen = () => {
     getAllProjects.push({ ...doc.data(), key: doc.id });
     });
     setAllProjects(getAllProjects);
+  }
+
+  async function readProjectPressed () {
+
   }
 
   // async function deleteProject() {
@@ -131,7 +135,7 @@ const ProjectScreen = () => {
 
       <Modal style={styles.modalContainer}
       animationType="slide"
-      visible={modalVisible}
+      visible={modalCreateVisible}
       >
         <View style={styles.modalView}>
 
@@ -158,9 +162,10 @@ const ProjectScreen = () => {
               ></TextInput>
             </View>
 
-            <View>
+            <View style={styles.fieldViewOfModal}>
               <Text style={styles.modalText}>Category</Text>
               <Picker
+              style={styles.picker}
               selectedValue={projectCategory}
               onValueChange={(itemValue, itemIndex) => setProjectCategory(itemValue)}
               >
@@ -169,13 +174,7 @@ const ProjectScreen = () => {
               <Picker.Item label="Work" value="Work" />
               </Picker>
             </View>
-
-            {/* <View>
-              <DatePicker date={date} onDateChange={setDate} />
-            </View> */}
           </View>
-          
-
           
           <View style={styles.btnContainer}>
           <Button
@@ -184,7 +183,7 @@ const ProjectScreen = () => {
               <Text>Add Project</Text>
             </Button>
             <Button
-            onPress={() => setModalVisible(false)}
+            onPress={() => setModalCreateVisible(false)}
             >
               <Text>Cancel</Text>
             </Button>
@@ -199,7 +198,7 @@ const ProjectScreen = () => {
         icon="plus"
         color="white"
         theme={{ colors: { accent: '#1a75ff' } }}
-        onPress={() => setModalVisible(true)}
+        onPress={() => setModalCreateVisible(true)}
       /> 
     </View>
     
@@ -226,6 +225,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+    fontSize: 18,
   },
   inputText: {
     backgroundColor: '#f2f3f3',
@@ -234,6 +234,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     width: '80%',
+  },
+  picker: {
+    width: '50%',
+    alignContent: "center",
   },
 
   projectContainer: {
