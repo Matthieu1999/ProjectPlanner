@@ -17,21 +17,17 @@
 ---
 ## Data structure
 - **Users**
-  - email as ID
-    - UserId
-    - displayName
+  - UserId
+  - displayName
 - **Project**
-  - Name
-  - Description
-  - Color
-  - Owner
-  - List collaborators
-    - when entered
-    - id
-    - Name
+  - OwnerId
+  - projectName
+  - projectDescription
+  - projectCategory
+  - projectStatus
+  - projectColor
   - List steps
   - isDeleted
-  - Status
   - Completion %
 - **Step**
   - Name
