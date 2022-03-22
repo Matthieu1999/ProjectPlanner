@@ -1,9 +1,9 @@
 # ProjectPlanner
-
+This is the repository of an app I made for a school project.
 
 ---
 ## Project description
-
+ProjectPlanner is a mobile app made mostly for students. It aims to help the users to manage their projects. These can be for school, work or any other reason.
 
 ---
 ## npm installs
@@ -20,26 +20,26 @@
   - email as ID
     - UserId
     - displayName
-- **Project**
-  - OwnerId
+- **Projects**
+  - ownerId
   - projectName
   - projectDescription
   - projectCategory
   - projectStatus
+    - To Do
+    - In Progress
+    - Done
   - projectColor
+    - List of colors
+  - projectDeadline
   - List steps
   - isDeleted
   - Completion %
-- **Step**
-  - Name
-  - Description
-  - Deadline
+- **Steps**
+  - onwerId
+  - stepName
+  - stepDescription
+  - stepStatus
+  - stepOrder
+  - stepDeadline
   - isDeleted
-  - Owner (the one that added the step)
-  - List Comments
-  - Status
-- **Colors**
-  - Red
-  - Blue
-  - Green
-  - ...
