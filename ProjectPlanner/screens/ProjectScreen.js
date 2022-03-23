@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, Pressable, Modal, FlatList, TextInput, SafeAreaView, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Alert, Modal, FlatList, TextInput, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 
 import { auth, db } from '../firebase'
@@ -18,14 +18,14 @@ const ProjectScreen = () => {
   const [currentUser, setCurrentUser] = useState(null)
 
   const [modalCreateVisible, setModalCreateVisible] = useState(false)
-  const [modalProjectVisible, setModalProjectVisible] = useState(false)
+  const [modalDelete, setModalDelete] = useState(false)
 
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
   const [projectCategory, setProjectCategory] = useState('Personal')
+  const [projectCategoryColor, setProjectCategoryColor] = useState('')
   const [projectStatus, setProjectStatus] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
-  const [projectColor, setProjectColor] = useState('')
 
   const [allProjects, setAllProjects] = useState([]);
 
@@ -39,6 +39,7 @@ const ProjectScreen = () => {
         // getCurrentUser()
         setCurrentUser(loggedUserId);
         readProject()
+        console.log(allProjects)
       }
     });
 
@@ -52,18 +53,28 @@ const ProjectScreen = () => {
 
   async function createProject() {
 
+    let color = ""
+    if(projectCategory === 'Personal') {
+      color = '#cce6ff'
+    } 
+    if (projectCategory === 'Work') {
+      color = '#ffe0cc'
+    }
+    if (projectCategory === 'School') {
+      color = '#e6ffe6'
+    }
+    
     const newProject = await addDoc(collection(db, "Projects"), {
       ownerId: currentUser,
       projectName: projectName,
       projectDescription: projectDescription,
       isDeleted: false,
       projectCategory: projectCategory,
+      projectCategoryColor: color,
       projectSteps: [],
       projectStatus: "To Do",
       projectDeadline: "",
       projectCompletion: 0,
-      projectColor: projectColor,
-
     });
     setModalCreateVisible(false)
     setProjectName("")
@@ -72,58 +83,61 @@ const ProjectScreen = () => {
   }
 
   async function readProject() {
-
     const getAllProjects = [];
     const q = query(collection(db, "Projects"), where("ownerId", "==", currentUser), where("isDeleted", "==", false));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    // console.log(doc.id, " => ", doc.data());
     getAllProjects.push({ ...doc.data(), key: doc.id });
     });
     setAllProjects(getAllProjects);
   }
 
-  async function readProjectPressed () {
+  const deleteAlert = (item) =>
+    Alert.alert(
+      "Delete Project?",
+      "Are you sure you want to delete the project named '" + item.projectName + "'",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { text: "Confirm", onPress: () => deleteProject(item) }
+      ]
+    )
 
+  async function deleteProject(item) {
+    await updateDoc(doc(db, "Projects", item.key), {
+      isDeleted:true,
+    }); 
+    readProject()
   }
-
-  // async function deleteProject() {
-
-  //   await updateDoc(doc(db, "Projects", email), {
-  //     isDeleted:true,
-  //   }); 
-  // }
   
-
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-
-      <TouchableOpacity style={styles.item}
-      backgroundColor="">
-
+      <TouchableOpacity style={
+        {flex: 1,
+          backgroundColor: item.projectCategoryColor,
+          borderRadius: 20,
+          padding: 10,
+          marginTop: 5,
+          width: '80%',
+        }}
+        onLongPress={() => deleteAlert(item)}
+        >
         <View style={styles.projectUpper}>
           <Text>{item.projectName}</Text>
           <Text style={styles.projectStatus}>{item.projectStatus}</Text>
         </View>
 
         <View style={styles.projectUnder}>
-        
           <Text>{item.projectCompletion}%</Text>
         </View>
-        
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.itemRight}>
-      <MaterialIcons style={styles.icon} name="delete"/>
-      </TouchableOpacity>
-
     </View>
   );
 
   return (
     <View style={styles.container}>
-
       <SafeAreaView style={styles.project}>
         <FlatList
         ListFooterComponent={<View style={{ flexGrow: 1, justifyContent: 'flex-end', marginTop: 80, }}/>}
@@ -176,18 +190,29 @@ const ProjectScreen = () => {
               <Picker.Item label="Work" value="Work" />
               </Picker>
             </View>
+
+            <View style={styles.fieldViewOfModal}>
+              <Text style={styles.modalText}>Steps</Text>
+              <Text>Coming Soon</Text>
+            </View>
+            <View style={styles.fieldViewOfModal}>
+              <Text style={styles.modalText}>Deadline</Text>
+              <Text>Coming Soon</Text>
+            </View>
           </View>
           
           <View style={styles.btnContainer}>
-          <Button
-            onPress={() => createProject()}
-            >
-              <Text>Add Project</Text>
-            </Button>
             <Button
+            style={styles.btnModal}
             onPress={() => setModalCreateVisible(false)}
             >
-              <Text>Cancel</Text>
+              <Text style={styles.btnModalText}>Cancel</Text>
+            </Button>
+            <Button
+            style={styles.btnModal}
+            onPress={() => createProject()}
+            >
+              <Text style={styles.btnModalText}>Add Project</Text>
             </Button>
           </View>
 
@@ -241,6 +266,19 @@ const styles = StyleSheet.create({
     width: '50%',
     alignContent: "center",
   },
+  btnContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+    justifyContent: 'center',
+  },
+  btnModal: {
+    borderWidth: 1,
+    borderColor: 'blue',
+    margin: 10,
+  },
+  btnModalText: {
+    color: 'blue',
+  },
 
   projectContainer: {
     flex: 1,
@@ -262,26 +300,16 @@ const styles = StyleSheet.create({
   itemContainer: {
     flex: 1,
     flexDirection: "row",
+    width: '95%',
+    alignSelf: 'center',
   },
   item: {
     flex: 1,
-    backgroundColor: 'white',
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     padding: 10,
     marginVertical: 2,
     marginLeft: 10,
-  },
-  itemRight: {
-    backgroundColor: '#ffb3b3',
-    width: "10%",
-    marginVertical: 2,
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
-    marginRight: 10,
-    borderLeftWidth: 0.5,
-    alignItems: "center",
-    justifyContent: "center",
   },
   projectUpper: {
     flex: 1,
