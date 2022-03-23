@@ -34,20 +34,18 @@ const ProjectScreen = () => {
   useEffect(() => {
 
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const loggedUserId = user.uid
-        // getCurrentUser()
-        setCurrentUser(loggedUserId);
-        readProject()
+      if (user !== null) {
+        getCurrentUser()
       }
     });
   }, [])
 
-  // async function getCurrentUser() {
-  //   if (auth.currentUser !== null) {
-  //     setCurrentUser(auth.currentUser);
-  //   }
-  // }
+  async function getCurrentUser() {
+    if (auth.currentUser !== null) {
+      setCurrentUser(auth.currentUser.uid);
+      readProject(auth.currentUser.uid)
+    }
+  }
 
   async function createProject() {
 
@@ -77,12 +75,12 @@ const ProjectScreen = () => {
     setModalCreateVisible(false)
     setProjectName("")
     setProjectDescription("")
-    readProject()
+    getCurrentUser()
   }
 
-  async function readProject() {
+  async function readProject(uid) {
     const getAllProjects = [];
-    const q = query(collection(db, "Projects"), where("ownerId", "==", currentUser), where("isDeleted", "==", false));
+    const q = query(collection(db, "Projects"), where("ownerId", "==", uid), where("isDeleted", "==", false));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
     getAllProjects.push({ ...doc.data(), key: doc.id });
@@ -107,7 +105,7 @@ const ProjectScreen = () => {
     await updateDoc(doc(db, "Projects", item.key), {
       isDeleted:true,
     }); 
-    readProject()
+    getCurrentUser()
   }
   
   const renderItem = ({ item }) => (
