@@ -126,6 +126,8 @@ const ProjectScreen = () => {
 
       <SafeAreaView style={styles.project}>
         <FlatList
+        ListFooterComponent={<View style={{ flexGrow: 1, justifyContent: 'flex-end', marginTop: 80, }}/>}
+        style={styles.projectList}
         data={allProjects}
         renderItem={renderItem}
         keyExtractor={item => item.key}
@@ -242,6 +244,10 @@ const styles = StyleSheet.create({
 
   projectContainer: {
     flex: 1,
+  },
+
+  projectList: {
+    // marginBottom: 80,
   },
 
   // FAB styling
