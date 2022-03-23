@@ -17,7 +17,6 @@ const AccountScreen = () => {
       if (user) {
         getCurrentUser()
         setEmail(user.email)
-        readUsername()
       }
     });
   }, [])
@@ -25,7 +24,8 @@ const AccountScreen = () => {
 
   async function getCurrentUser() {
     if (auth.currentUser !== null) {
-      setCurrentUser(auth.currentUser);
+      setCurrentUser(auth.currentUser.uid);
+      readUsername(auth.currentUser.email)
     }
   }
 
@@ -34,10 +34,11 @@ const AccountScreen = () => {
     await updateDoc(doc(db, "Users", email), {
       displayName:userName
     }); 
+    getCurrentUser()
   };
 
-  async function readUsername() {
-    const docRef = doc(db, "Users", email);
+  async function readUsername(userEmail) {
+    const docRef = doc(db, "Users", userEmail);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -55,7 +56,6 @@ const AccountScreen = () => {
     behavior="padding"
     >
       <View style={styles.usernameContainer}>
-
 
         <Text style={styles.itemText}>Username: </Text>
 
@@ -78,7 +78,6 @@ const AccountScreen = () => {
       
       <Text style={styles.itemText}>Password: ********** </Text>
 
-
     </KeyboardAvoidingView>
   )
 }
@@ -86,7 +85,6 @@ const AccountScreen = () => {
 export default AccountScreen
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     // alignItems: 'center',
