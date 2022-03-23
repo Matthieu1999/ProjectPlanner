@@ -39,10 +39,8 @@ const ProjectScreen = () => {
         // getCurrentUser()
         setCurrentUser(loggedUserId);
         readProject()
-        console.log(allProjects)
       }
     });
-
   }, [])
 
   // async function getCurrentUser() {
