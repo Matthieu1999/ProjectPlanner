@@ -4,7 +4,7 @@
     "slug": "ProjectPlanner",
     "version": "0.0.6",
     "orientation": "portrait",
-    "icon": "./assets/new-icon.png",
+    "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
