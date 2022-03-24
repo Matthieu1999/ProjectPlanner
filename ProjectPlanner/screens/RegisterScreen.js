@@ -19,7 +19,6 @@ import {Ionicons} from '@expo/vector-icons'
 let dateLogin;
 
 const RegisterScreen = () => {
-
   
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -33,7 +32,6 @@ const RegisterScreen = () => {
         navigation.navigate("Home")
       }
     })
-
     return unsubscribe;
   }, [])
 
@@ -48,10 +46,10 @@ const RegisterScreen = () => {
   }
 
   async function createUserFirestore(uid) {
-
     try {
       await setDoc(doc(db, "Users", email.toLowerCase()), {
         userId: uid,
+        displayName: "",
       });
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -59,7 +57,6 @@ const RegisterScreen = () => {
   };
 
   const provider = new GoogleAuthProvider();
-
   const googleAuth = () => {
     dateLogin = new Date();
     signInWithPopup(auth, provider)
@@ -70,13 +67,12 @@ const RegisterScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView
+    <View
     style={styles.container}
     behavior="padding"
     >
 
-      <View style={styles.inputContainer}>
-
+      <KeyboardAvoidingView style={styles.inputContainer}>
         <TextInput
         placeholder="Email"
         value={email}
@@ -93,7 +89,7 @@ const RegisterScreen = () => {
         secureTextEntry
         >
         </TextInput>
-      </View>
+      </KeyboardAvoidingView>
 
       <View style={styles.buttonContainer}>
 
@@ -122,7 +118,7 @@ const RegisterScreen = () => {
         </TouchableOpacity>
 
       </View>
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 
