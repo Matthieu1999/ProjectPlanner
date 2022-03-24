@@ -23,7 +23,6 @@ const ProjectScreen = () => {
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
   const [projectCategory, setProjectCategory] = useState('Personal')
-  const [projectCategoryColor, setProjectCategoryColor] = useState('')
   const [projectStatus, setProjectStatus] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
 
