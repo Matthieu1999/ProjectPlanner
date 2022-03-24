@@ -26,7 +26,6 @@ const LoginScreen = () => {
         navigation.replace("Home")
       }
     })
-
     return unsubscribe;
   }, [])
 
@@ -35,7 +34,6 @@ const LoginScreen = () => {
       .then(userCredentials => {
         const user = userCredentials.user;
         // console.log('Logged in with: ', user.email);
-        
       })
       .catch(error => alert(error.message))
   }
@@ -64,7 +62,6 @@ const LoginScreen = () => {
     const credential = GoogleAuthProvider.credentialFromError(error);
     // ...
     });
-
     // dateLogin = new Date();
     // signInWithPopup(auth, provider)
     // .then((result) => {
@@ -75,12 +72,12 @@ const LoginScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView
+    
+    <View
     style={styles.container}
-    behavior="padding"
+    // behavior="padding"
     >
-
-      <View style={styles.inputContainer}>
+      <KeyboardAvoidingView style={styles.inputContainer}>
         <TextInput
         placeholder="Email"
         value={email}
@@ -97,31 +94,34 @@ const LoginScreen = () => {
         secureTextEntry
         >
         </TextInput>
-      </View>
+      </KeyboardAvoidingView>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-        onPress={handleLogin}
-        style={styles.button}
-        >
-          <Text style={styles.buttonText}>
-            Sign in
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.nrmlButtonContainer}>
+          <TouchableOpacity
+          onPress={() => navigation.navigate('Register')}
+          style={styles.buttonSignUp}
+          >
+            <Text style={styles.buttonOutlineText}>
+              Sign up
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-        onPress={() => navigation.navigate('Register')}
-        style={[styles.button, styles.buttonOutline]}
-        >
-          <Text style={styles.buttonOutlineText}>
-            Sign up
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+          onPress={handleLogin}
+          style={styles.buttonSignIn}
+          >
+            <Text style={styles.buttonText}>
+              Sign in
+            </Text>
+          </TouchableOpacity>
+        </View>
 
+        <View style={styles.socialButtonContainer}>
         <TouchableOpacity
         disabled={true} 
         onPress={googleAuth}
-        style={[styles.googleButton, styles.googleButtonOutline]}
+        style={styles.googleButton}
         >
           <View style={styles.buttonWithIcon}>
           <Ionicons style={styles.icon} name="logo-google"/>
@@ -132,9 +132,10 @@ const LoginScreen = () => {
           </View>
           
         </TouchableOpacity>
-
+        </View>
+        
       </View>
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 
@@ -158,17 +159,29 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   buttonContainer: {
-    width: '60%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 40,
   },
-  button: {
+  nrmlButtonContainer: {
+    flexDirection: 'row',
+  },
+  buttonSignIn: {
     backgroundColor: 'blue',
-    width: '100%',
+    width: '40%',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+  },
+  buttonSignUp: {
+    backgroundColor: 'white',
+    width: '40%',
+    padding: 15,
+    borderRadius: 10,
+    borderColor: 'blue',
+    borderWidth: 1,
+    alignItems: 'center',
+    marginRight: 10,
   },
   buttonOutline: {
     backgroundColor: 'white',
@@ -186,16 +199,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
   },
+
+  socialButtonContainer: {
+    // width: '100%',
+    marginTop: 30,
+  },
   googleButton: {
-    backgroundColor: 'blue',
-    width: '150%',
+    backgroundColor: 'white',
     padding: 15,
     borderRadius: 50,
     alignItems: 'center',
-  },
-  googleButtonOutline: {
-    backgroundColor: 'white',
-    marginTop: 50,
     borderColor: 'grey',
     borderWidth: 1,
   },
@@ -206,7 +219,7 @@ const styles = StyleSheet.create({
   },
   buttonWithIcon: {
     flexDirection: 'row',
-    alignContent: 'space-around',
+    justifyContent: 'space-between',
   },
   icon: {
     fontSize: 20,
