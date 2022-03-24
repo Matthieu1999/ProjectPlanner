@@ -37,9 +37,6 @@ export function CustomDrawer(props) {
         });
       }, [])
 
-
-
-
     return (
         <View style={styles.drawerView}>
             <DrawerContentScrollView 
