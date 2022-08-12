@@ -77,7 +77,7 @@ const AccountScreen = () => {
         </View>
       </View>
 
-      
+        {/* Modal to modify the username */}
         <Modal style={styles.modal}
         transparent={true}
         animationType="slide"
@@ -98,6 +98,7 @@ const AccountScreen = () => {
               >
                 <Text>Cancel</Text>
               </TouchableOpacity>
+              
               <TouchableOpacity
               style={styles.btnModal}
               onPress={() => updateUsername()}

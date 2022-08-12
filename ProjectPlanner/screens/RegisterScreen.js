@@ -18,10 +18,13 @@ import {Ionicons} from '@expo/vector-icons'
 
 let dateLogin;
 
+const emailRgex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
 const RegisterScreen = () => {
   
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
   const [emailFirestore, setEmailFirestore] = useState('')
 
   const navigation = useNavigation()
@@ -36,13 +39,19 @@ const RegisterScreen = () => {
   }, [])
 
   const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
+    
+    // if ((email !== '' || email !== null) && emailRgex.test(email) && (password !== '' && password !== null) && passwordConfirm === password) {
+    // }
+
+      createUserWithEmailAndPassword(auth, email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
         // console.log('Registered with: ', user.email);
         createUserFirestore(user.uid)
       })
       .catch(error => alert(error.message))
+    
+
   }
 
   async function createUserFirestore(uid) {
@@ -89,6 +98,14 @@ const RegisterScreen = () => {
         secureTextEntry
         >
         </TextInput>
+        {/* <TextInput
+        placeholder="Confirm Password"
+        value={passwordConfirm}
+        onChangeText={text => setPasswordConfirm(text)}
+        style={styles.input}
+        secureTextEntry
+        >
+        </TextInput> */}
       </KeyboardAvoidingView>
 
       <View style={styles.buttonContainer}>
