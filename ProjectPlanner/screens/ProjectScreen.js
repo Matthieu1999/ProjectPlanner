@@ -9,19 +9,20 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Button, FAB } from 'react-native-paper';
 
 import {Picker} from '@react-native-picker/picker';
-import {MaterialIcons, AntDesign, Ionicons, Octicons } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
+import {MaterialIcons, Ionicons} from '@expo/vector-icons';
 
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 
 const ProjectScreen = () => {
 
   const [currentUser, setCurrentUser] = useState(null)
 
+  // NAVIGATION
+  const navigation = useNavigation()
+
   // MODAL VISIBILITY STATE
   const [modalCreateVisible, setModalCreateVisible] = useState(false)
-  const [modalProjectVisible, setModalProjectVisible] = useState(false)
-  const [modalAddStepVisible, setModalAddStepVisible] = useState(false)
 
   // PROJECT VALUES
   const [projectName, setProjectName] = useState('')
@@ -31,15 +32,8 @@ const ProjectScreen = () => {
   const [projectCompletion, setProjectCompletion] = useState('')
   const [projectDeadline, setProjectDeadline] = useState(new Date())
 
-  // STEP VALUES
-  const [stepName, setStepName] = useState('')
-  const [stepDescription, setStepDescription] = useState('')
-  const [stepStatus, setStepStatus] = useState('')
-  const [stepDeadline, setStepDeadline] = useState(new Date())
-
   // ARRAYS FOR READS FROM FIRESTORE
   const [allProjects, setAllProjects] = useState([]);
-  const [allSteps, setAllSteps] = useState([]);
 
   // NOT USED YET
   const [date, setDate] = useState(new Date())
@@ -60,7 +54,6 @@ const ProjectScreen = () => {
   }
 
   async function createProject() {
-
     let color = ""
     if(projectCategory === 'Personal') {
       color = '#cce6ff'
@@ -84,31 +77,12 @@ const ProjectScreen = () => {
       projectDeadline: "",
       projectCompletion: 0,
     });
-    // const newStep = await addDoc(collection(db, "Projects", newProject.id, "Steps"), {
-    //   stepName: stepName,
-    //   stepDescription: stepDescription,
-    //   stepStatus: "Todo",
-    //   stepDeadline: "stepDeadline",
-    // });
     setModalCreateVisible(false)
     setProjectName("")
     setProjectDescription("")
     getCurrentUser()
   }
 
-  async function createStep (item) {
-    const newStep = await addDoc(collection(db, "Projects", item.key, "Steps"), {
-      stepName: stepName,
-      // stepDescription: stepDescription,
-      stepDeadline: "stepDeadline",
-    });
-  }
-
-  function closeProjectModal() {
-    setProjectName("")
-    setProjectDescription("")
-    setModalProjectVisible(false)
-  }
 
   async function readProject(uid) {
     const getAllProjects = [];
@@ -120,13 +94,6 @@ const ProjectScreen = () => {
     setAllProjects(getAllProjects);
   }
 
-  async function readCompleteProject(item) {
-
-    setModalProjectVisible(true)
-    setProjectName(item.projectName)
-    setProjectDescription(item.projectDescription)
-    setProjectStatus(item.projectStatus)
-  }
 
   const deleteAlert = (item) =>
     Alert.alert(
@@ -158,7 +125,7 @@ const ProjectScreen = () => {
           marginTop: 5,
           width: '80%',
         }}
-        onPress={() => readCompleteProject(item)}
+        onPress={() => navigation.navigate('CompleteProject', {Project: item})}
         onLongPress={() => deleteAlert(item)}
         >
         <View style={styles.projectUpper}>
@@ -172,12 +139,6 @@ const ProjectScreen = () => {
       </TouchableOpacity>
     </View>
   );
-
-  const renderStep = ({ step }) => (
-    <View>
-      <Text></Text>
-    </View>
-  )
 
   return (
     <View style={styles.container}>
@@ -194,6 +155,7 @@ const ProjectScreen = () => {
       {/* Modal to create a project */}
       <Modal style={styles.modalContainer}
       animationType="slide"
+      transparent={true}
       visible={modalCreateVisible}
       >
         <View style={styles.modalView}>
@@ -259,130 +221,8 @@ const ProjectScreen = () => {
         </View>
       </Modal>
 
-      {/* Modal to add a new step to an existing project */}
-      <Modal style={styles.modalContainer}
-      animationType="slide"
-      transparent={true}
-      visible={modalAddStepVisible}
-      >
-
-        <View style={styles.modalContent}>
-            <View style={styles.modalView}>
-              <Text style={styles.Title}>Add a new step</Text>
-              <TextInput
-              placeholder="Step name..."
-              onChangeText={text => setStepName(text)}
-              style={styles.inputText}
-              >
-              </TextInput>
-
-              <View style={styles.btnModalContainer}>
-                <TouchableOpacity
-                style={styles.btnModal}
-                onPress={() => setModalAddStepVisible(false)}
-                >
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
-              
-                <TouchableOpacity
-                style={styles.btnModal}
-                onPress={() => createStep()}
-                >
-                  <Text>Save</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-
-      </Modal>
-
-      {/* Modal Project Complete View */}
-      <Modal 
-      style={styles.modalContainer}
-      animationType="slide"
-      visible={modalProjectVisible}
-      >
-        <ScrollView>
-        <View style={styles.viewTitleStatus}
-        >
-            <TouchableOpacity
-            onPress={() => closeProjectModal()}
-            >
-              <Ionicons name="arrow-back" size={22}/>
-            </TouchableOpacity>
-            <Text style={styles.projectName}>{projectName}</Text>
-            <Text style={styles.projectStatus}>{projectStatus}</Text>
-          </View>
-
-        <View style={styles.viewCompleteProject}>
-
-          <View style={styles.viewProjectContent}>
-
-            <View style={styles.viewProgress}>
-              {/* progress bar depending on the steps that are finished */}
-            </View>
-
-            <View style={styles.viewDeadline}>
-              <Text style={styles.projectDeadlineTitle}>Deadline</Text>
-            </View>
-
-            <View style={styles.viewElement}>
-
-              <View style={styles.specHeader}>
-                <Text style={styles.Title}>Description</Text>
-                <TouchableOpacity>
-                  <Ionicons name="ios-create-outline" size={25}/>
-                </TouchableOpacity>
-              </View>
-
-              <Text style={styles.projectDescription} >{projectDescription}</Text>
-            </View>
-
-            <View style={styles.viewElement}>
-
-              <View style={styles.specHeader}>
-                <Text style={styles.Title}>Steps</Text>
-                <TouchableOpacity
-                onPress={() => setModalAddStepVisible(true)}
-                >
-                  <Ionicons name="add-circle-outline" size={25}/>
-                </TouchableOpacity>
-              </View>
-
-              <SafeAreaView style={styles.project}>
-                <FlatList
-                ListFooterComponent={<View style={{ flexGrow: 1, justifyContent: 'flex-end', marginTop: 80, }}/>}
-                style={styles.projectList}
-                data={allProjects}
-                renderItem={renderItem}
-                keyExtractor={item => item.key}
-                />
-              </SafeAreaView>
-            </View>
-
-            <View style={styles.viewComments}>
-              <Text style={styles.projectCommentsTitle}>Comments</Text>
-            </View>
-
-          </View>
-
-
-        </View>
-        </ScrollView>
-
-        
-
-        {/* <Button
-        style={styles.btnModal}
-        // onPress={() => closeProjectModal()}
-        >
-          <Text style={styles.btnModalText}>Save</Text>
-        </Button> */}
-      </Modal>
-
       {/* FAB button to open the create project modal */}
-      <FAB
-      style={styles.fab}
+      <FAB style={styles.fab}
       medium
       icon="plus"
       color="white"
