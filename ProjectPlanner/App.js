@@ -16,6 +16,7 @@ import ProjectScreen from './screens/ProjectScreen';
 import AccountScreen from './screens/AccountScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import FeedbackScreen from './screens/FeedbackScreen';
+import CompleteProjectScreen from './screens/CompleteProjectScreen';
 import { CustomDrawer } from './components/CustomDrawer';
 
 import {Ionicons, SimpleLineIcons} from '@expo/vector-icons'
@@ -86,15 +87,18 @@ export default function App() {
   
   return (
     <NavigationContainer>
-    <Stack.Navigator>
+      <Stack.Navigator>
         <Stack.Screen options={{ headerShown: true,
         headerTitleAlign: 'center',
         }} name="Login" component={LoginScreen} />
         <Stack.Screen options={{ headerShown: true,
         headerTitleAlign: 'center',
          }} name="Register" component={RegisterScreen} />
-        <Stack.Screen options={{ headerShown: false
+        <Stack.Screen options={{ headerShown: false,
         }} name="Home" component={MyDrawer} />
+        <Stack.Screen options={{headerShown: true,
+        headerTitleAlign: 'center',
+        }} name="CompleteProject" component={CompleteProjectScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
