@@ -6,7 +6,6 @@ import { auth, db } from '../firebase'
 import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { onAuthStateChanged } from "firebase/auth";
 
-import {Picker} from '@react-native-picker/picker';
 import {MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -59,6 +58,7 @@ const CompleteProjectScreen = () => {
     if (auth.currentUser !== null) {
       setCurrentUser(auth.currentUser.uid);
       readCompleteProject()
+      readAllSteps()
     //   readProject(auth.currentUser.uid)
     }
   }
@@ -80,9 +80,30 @@ const CompleteProjectScreen = () => {
     setProjectStatus(Project.projectStatus)
   }
 
-  const renderStep = ({ step }) => (
-    <View>
-      <Text></Text>
+  async function readAllSteps () {
+    const getAllSteps = [];
+    const querySnapshot = await getDocs(collection(db, "Projects", Project.key, "Steps"));
+    querySnapshot.forEach((doc) => {
+    getAllSteps.push({ ...doc.data(), key: doc.id });
+    });
+    setAllSteps(getAllSteps);
+  }
+
+  const renderStep = ({ item }) => (
+    <View style={styles.stepContainer}>
+      <View style={{
+      elevation: 2,
+      backgroundColor: '#e1e1ea',
+      marginVertical: 10,
+      padding: 15,
+      color: "black",
+      borderRadius: 25,
+      }}
+      >
+        <Text>
+            {item.stepName}
+        </Text>
+      </View>
     </View>
   )
 
@@ -129,12 +150,6 @@ const CompleteProjectScreen = () => {
       {/* Project Complete View */}
       
         <View>
-        {/* <View style={styles.viewTitleStatus}
-        >
-            
-            <Text style={styles.projectName}>{projectName}</Text>
-            <Text style={styles.projectStatus}>{projectStatus}</Text>
-          </View> */}
 
         <View style={styles.viewCompleteProject}>
 
@@ -148,6 +163,7 @@ const CompleteProjectScreen = () => {
               <Text style={styles.projectDeadlineTitle}>Deadline</Text>
             </View>
 
+            {/* DESCRIPTION */}
             <View style={styles.viewElement}>
 
               <View style={styles.specHeader}>
@@ -160,6 +176,7 @@ const CompleteProjectScreen = () => {
               <Text style={styles.projectDescription} >{projectDescription}</Text>
             </View>
 
+            {/* STEPS */}
             <View style={styles.viewElement}>
 
               <View style={styles.specHeader}>
@@ -171,9 +188,17 @@ const CompleteProjectScreen = () => {
                 </TouchableOpacity>
               </View>
 
-              <Text></Text>
+              <SafeAreaView style={styles.step}>
+                <FlatList
+                style={styles.stepList}
+                data={allSteps}
+                renderItem={renderStep}
+                keyExtractor={item => item.key}
+                />
+              </SafeAreaView>
             </View>
 
+            {/* COMMENTS */}
             <View style={styles.viewComments}>
               <Text style={styles.projectCommentsTitle}>Comments</Text>
             </View>
