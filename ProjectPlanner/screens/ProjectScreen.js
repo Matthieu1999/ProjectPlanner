@@ -124,6 +124,7 @@ const ProjectScreen = () => {
           padding: 10,
           marginTop: 5,
           width: '80%',
+          elevation: 2,
         }}
         onPress={() => navigation.navigate('CompleteProject', {Project: item})}
         onLongPress={() => deleteAlert(item)}
@@ -337,69 +338,6 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
 
-  // Complete view of single project (modal)
-
-  viewCompleteProject: {
-    flexDirection: "column",
-    // alignSelf: "center",
-  },
-
-
-  viewTitleStatus: {
-    // flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    backgroundColor: "#EEEEEE",
-  },
-  projectName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-
-  viewProjectContent: {
-    // width: '80%',
-    paddingHorizontal: 20,
-  },
-  viewProgress: {
-
-  },
-  viewDeadline: {
-
-  },
-
-  viewElement: {
-    elevation: 2,
-    backgroundColor: '#FFF',
-    marginVertical: 10,
-    padding: 15,
-    borderRadius: 25,
-  },
-  specHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  Title: {
-    marginBottom: 10,
-    fontSize: 20,
-    color: '#333',
-  },
-  projectDescription: {
-  },
-
-
-  viewComments: {
-    alignItems: "center",
-    elevation: 2,
-    backgroundColor: '#FFF',
-    marginVertical: 10,
-    padding: 15,
-    borderRadius: 25,
-  },
-
   // Firestore database read styles
   itemContainer: {
     flex: 1,
@@ -409,7 +347,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   item: {
-    flex: 1,
+    // flex: 1,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     padding: 10,
