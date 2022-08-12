@@ -1,14 +1,15 @@
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, Alert, Modal, FlatList, TextInput, SafeAreaView, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Alert, Modal, FlatList, List, TextInput, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 
 import { auth, db } from '../firebase'
-import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from "firebase/auth";
 
 import {MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
+
 
 const CompleteProjectScreen = () => {
     
@@ -22,11 +23,11 @@ const CompleteProjectScreen = () => {
 
   // MODAL VISIBILITY STATE
   const [modalAddStepVisible, setModalAddStepVisible] = useState(false)
+  const [modalModifyStepVisible, setModalModifyStepVisible] = useState(false)
 
   // PROJECT VALUES
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
-  const [projectCategory, setProjectCategory] = useState('Personal')
   const [projectStatus, setProjectStatus] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
   const [projectDeadline, setProjectDeadline] = useState(new Date())
@@ -37,7 +38,6 @@ const CompleteProjectScreen = () => {
   const [stepDeadline, setStepDeadline] = useState(new Date())
 
   // ARRAYS FOR READS FROM FIRESTORE
-  const [allProjects, setAllProjects] = useState([]);
   const [allSteps, setAllSteps] = useState([]);
 
   // NOT USED YET
@@ -59,7 +59,6 @@ const CompleteProjectScreen = () => {
       setCurrentUser(auth.currentUser.uid);
       readCompleteProject()
       readAllSteps()
-    //   readProject(auth.currentUser.uid)
     }
   }
     
@@ -68,9 +67,10 @@ const CompleteProjectScreen = () => {
     setModalAddStepVisible(false)
     const newStep = await addDoc(collection(db, "Projects", Project.key, "Steps"), {
       stepName: stepName,
-      stepStatus: stepStatus,
+      stepStatus: "Not Done",
       stepDeadline: "stepDeadline",
     });
+    readAllSteps()
   }
 
   async function readCompleteProject() {
@@ -89,22 +89,46 @@ const CompleteProjectScreen = () => {
     setAllSteps(getAllSteps);
   }
 
+  const deleteAlert = (item) =>
+    Alert.alert(
+      "Modify / Delete?",
+      "Modify or delete the step named '" + item.stepName + "'?",
+      [
+        {
+            text: "Keep it",
+            style: "cancel"
+        },
+        {
+            text: "Modify", onPress: () => setModalModifyStepVisible(true)
+        },
+        { 
+            text: "Delete", onPress: () => deleteStep(item) 
+        }
+      ]
+    )
+
+    async function deleteStep (item) {
+        await deleteDoc(doc(db, "Projects", Project.key, "Steps", item.key ))
+        readAllSteps()
+    }
+
   const renderStep = ({ item }) => (
-    <View style={styles.stepContainer}>
-      <View style={{
-      elevation: 2,
-      backgroundColor: '#e1e1ea',
-      marginVertical: 10,
-      padding: 15,
-      color: "black",
-      borderRadius: 25,
-      }}
-      >
+    
+    <TouchableOpacity style={{
+    elevation: 2,
+    backgroundColor: '#f0f0f5',
+    marginVertical: 10,
+    padding: 15,
+    color: "black",
+    borderRadius: 25,
+    }}
+    onPress={() => {}}
+    onLongPress={() => deleteAlert(item)}
+    >
         <Text>
             {item.stepName}
         </Text>
-      </View>
-    </View>
+    </TouchableOpacity> 
   )
 
     return (
@@ -147,69 +171,138 @@ const CompleteProjectScreen = () => {
 
       </Modal>
 
-      {/* Project Complete View */}
-      
-        <View>
+      {/* Modal modify a step */}
+      <Modal style={styles.modalContainer}
+      animationType="slide"
+      transparent={true}
+      visible={modalModifyStepVisible}
+      >
 
-        <View style={styles.viewCompleteProject}>
+        <View style={styles.modalContent}>
+            <View style={styles.modalView}>
+              <Text style={styles.Title}>Modify Step</Text>
+              <TextInput
+              text="New step name..."
+              onChangeText={text => setStepName(text)}
+              style={styles.inputText}
+              >
+              </TextInput>
 
-          <View style={styles.viewProjectContent}>
-
-            <View style={styles.viewProgress}>
-              {/* progress bar depending on the steps that are finished */}
-            </View>
-
-            <View style={styles.viewDeadline}>
-              <Text style={styles.projectDeadlineTitle}>Deadline</Text>
-            </View>
-
-            {/* DESCRIPTION */}
-            <View style={styles.viewElement}>
-
-              <View style={styles.specHeader}>
-                <Text style={styles.Title}>Description</Text>
-                <TouchableOpacity>
-                  <Ionicons name="ios-create-outline" size={25}/>
-                </TouchableOpacity>
-              </View>
-
-              <Text style={styles.projectDescription} >{projectDescription}</Text>
-            </View>
-
-            {/* STEPS */}
-            <View style={styles.viewElement}>
-
-              <View style={styles.specHeader}>
-                <Text style={styles.Title}>Steps</Text>
+              <View style={styles.btnModalContainer}>
                 <TouchableOpacity
-                onPress={() => setModalAddStepVisible(true)}
+                style={styles.btnModal}
+                onPress={() => setModalModifyStepVisible(false)}
                 >
-                  <Ionicons name="add-circle-outline" size={25}/>
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
+              
+                <TouchableOpacity
+                style={styles.btnModal}
+                onPress={() => modifyStep()}
+                >
+                  <Text>Save</Text>
                 </TouchableOpacity>
               </View>
-
-              <SafeAreaView style={styles.step}>
-                <FlatList
-                style={styles.stepList}
-                data={allSteps}
-                renderItem={renderStep}
-                keyExtractor={item => item.key}
-                />
-              </SafeAreaView>
             </View>
-
-            {/* COMMENTS */}
-            <View style={styles.viewComments}>
-              <Text style={styles.projectCommentsTitle}>Comments</Text>
-            </View>
-
           </View>
 
+      </Modal>
 
-        </View>
-        </View>
+      {/* Modal modify the project description */}
+      {/* <Modal style={styles.modalContainer}
+      animationType="slide"
+      transparent={true}
+      visible={modalModifyStepVisible}
+      >
 
+        <View style={styles.modalContent}>
+            <View style={styles.modalView}>
+              <Text style={styles.Title}>Modify Step</Text>
+              <TextInput
+              text="New step name..."
+              onChangeText={text => setStepName(text)}
+              style={styles.inputText}
+              >
+              </TextInput>
 
+              <View style={styles.btnModalContainer}>
+                <TouchableOpacity
+                style={styles.btnModal}
+                onPress={() => setModalAddStepVisible(false)}
+                >
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
+              
+                <TouchableOpacity
+                style={styles.btnModal}
+                onPress={() => modifyStep()}
+                >
+                  <Text>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+      </Modal> */}
+
+      {/* Project Complete View */}
+      
+        <SafeAreaView>
+
+            <ScrollView style={styles.viewCompleteProject}>
+
+                <View style={styles.viewProjectContent}>
+
+                    <View style={styles.viewProgress}>
+                        {/* progress bar depending on the steps that are finished */}
+                    </View>
+
+                    <View style={styles.viewDeadline}>
+                        <Text style={styles.projectDeadlineTitle}>Deadline</Text>
+                    </View>
+
+                    {/* DESCRIPTION */}
+                    <View style={styles.viewElement}>
+
+                        <View style={styles.specHeader}>
+                            <Text style={styles.Title}>Description</Text>
+                            <TouchableOpacity>
+                                <Ionicons name="ios-create-outline" size={25}/>
+                            </TouchableOpacity>
+                        </View>
+
+                        <Text style={styles.projectDescription} >{projectDescription}</Text>
+                    </View>
+
+                    {/* STEPS */}
+                    <View style={styles.viewElement}>
+
+                        <View style={styles.specHeader}>
+                            <Text style={styles.Title}>Steps</Text>
+                            <TouchableOpacity
+                            onPress={() => setModalAddStepVisible(true)}
+                            >
+                                <Ionicons name="add-circle-outline" size={25}/>
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* <SafeAreaView style={styles.step}> */}
+                            <FlatList
+                            style={styles.stepList}
+                            data={allSteps}
+                            renderItem={renderStep}
+                            keyExtractor={item => item.key}
+                            />
+                        {/* </SafeAreaView> */}
+                    </View>
+
+                    {/* COMMENTS */}
+                    <View style={styles.viewComments}>
+                        <Text style={styles.projectCommentsTitle}>Comments</Text>
+                    </View>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     </View>
     )
 

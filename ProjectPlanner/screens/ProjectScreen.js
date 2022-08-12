@@ -98,7 +98,7 @@ const ProjectScreen = () => {
   const deleteAlert = (item) =>
     Alert.alert(
       "Delete Project?",
-      "Are you sure you want to delete the project named '" + item.projectName + "'",
+      "Are you sure you want to delete the project named '" + item.projectName + "'?",
       [
         {
           text: "Cancel",
