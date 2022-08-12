@@ -13,14 +13,15 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 const CompleteProjectScreen = () => {
     
+    // Getting the project item from previous page (param)
     const route = useRoute()
     const { Project } = route.params;
+
+    const navigation = useNavigation()
 
     const [currentUser, setCurrentUser] = useState(null)
 
   // MODAL VISIBILITY STATE
-  const [modalCreateVisible, setModalCreateVisible] = useState(false)
-  const [modalProjectVisible, setModalProjectVisible] = useState(false)
   const [modalAddStepVisible, setModalAddStepVisible] = useState(false)
 
   // PROJECT VALUES
@@ -33,7 +34,6 @@ const CompleteProjectScreen = () => {
 
   // STEP VALUES
   const [stepName, setStepName] = useState('')
-  const [stepDescription, setStepDescription] = useState('')
   const [stepStatus, setStepStatus] = useState('')
   const [stepDeadline, setStepDeadline] = useState(new Date())
 
@@ -50,6 +50,9 @@ const CompleteProjectScreen = () => {
         getCurrentUser()
       }
     });
+    navigation.setOptions({
+        title: Project.projectName,
+      });
   }, [])
 
   async function getCurrentUser() {
@@ -61,10 +64,11 @@ const CompleteProjectScreen = () => {
   }
     
 
-  async function createStep (item) {
-    const newStep = await addDoc(collection(db, "Projects", item.key, "Steps"), {
+  async function createStep () {
+    setModalAddStepVisible(false)
+    const newStep = await addDoc(collection(db, "Projects", Project.key, "Steps"), {
       stepName: stepName,
-      // stepDescription: stepDescription,
+      stepStatus: stepStatus,
       stepDeadline: "stepDeadline",
     });
   }
@@ -76,16 +80,14 @@ const CompleteProjectScreen = () => {
     setProjectStatus(Project.projectStatus)
   }
 
-//   const renderStep = ({ step }) => (
-//     <View>
-//       <Text></Text>
-//     </View>
-//   )
+  const renderStep = ({ step }) => (
+    <View>
+      <Text></Text>
+    </View>
+  )
 
     return (
         <View style={styles.container}>
-
-      
 
       {/* Modal to add a new step to an existing project */}
       <Modal style={styles.modalContainer}
