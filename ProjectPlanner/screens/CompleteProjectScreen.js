@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import { StyleSheet, Text, View, Alert, Modal, FlatList, List, TextInput, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
+import { ListItem } from 'react-native-elements'
 
 import { auth, db } from '../firebase'
 import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
@@ -42,9 +43,7 @@ const CompleteProjectScreen = () => {
 
   const [step, setStep] = useState({})
 
-  const [checkedCount, setCheckedCount] = useState()
-  const [allCount, setAllCount] = useState()
-  const [percentSteps, setPercentSteps] = useState()
+  const [percentSteps, setPercentSteps] = useState(0)
 
   // ARRAYS FOR READS FROM FIRESTORE
   const [allSteps, setAllSteps] = useState([]);
@@ -61,7 +60,6 @@ const CompleteProjectScreen = () => {
     navigation.setOptions({
       title: Project.projectName,
     });
-    readAllSteps()
     
   }, [])
 
@@ -171,9 +169,7 @@ const CompleteProjectScreen = () => {
 
     }
     else {
-      setCheckedCount(checkedStepsResult.size)
-      setAllCount(getSteps.size)
-      setPercentSteps(Number((checkedCount/allCount).toFixed(2)))
+      setPercentSteps(Number((checkedStepsResult.size/getSteps.size).toFixed(2)))
     }   
   }
 
@@ -372,13 +368,54 @@ const CompleteProjectScreen = () => {
                                 <Ionicons name="add-circle-outline" size={25}/>
                             </TouchableOpacity>
                         </View>
-                            <FlatList
+                            {/* <FlatList
                             style={styles.stepList}
                             data={allSteps}
                             renderItem={renderStep}
                             keyExtractor={item => item.key}
-                            />
-                    </View>
+                            /> */}
+                            {
+                              allSteps.map((item) => ( 
+                                <ListItem 
+                                style={{
+                                  // elevation: 2,
+                                  // backgroundColor: '#f0f0f5',
+                                  // marginVertical: 10,
+                                  // padding: 3,
+                                  // color: "black",
+                                  // borderRadius: 25,
+                                }}
+                                containerStyle={{
+                                  paddingTop: 10,
+                                  paddingRight: 10,
+                                  paddingBottom: 10,
+                                  // marginVertical: 10,
+                                  borderBottomWidth: 10,
+                                  borderColor:"white",
+                                  backgroundColor: "#f0f0f5",
+                                  // elevation: 2,
+
+                                
+                                // borderColor:"#f0f0f5",
+                                // elevation: 2,
+                                // backgroundColor: '#f0f0f5',
+                                // marginVertical: 10,
+                                // padding: 10,
+                                // color: "black",
+                                // borderRadius: 25,
+                                }}
+                                
+                                onPress={() => checkStep(item)}
+                                onLongPress={() => deleteAlert(item)}
+                                key = {item.key}
+                                // title = {item.stepName}
+                                bottomDivider
+                                >
+                                <Text>{item.stepName}</Text>
+                                </ListItem>
+                              ))
+                            }
+                        </View>
 
                     {/* COMMENTS */}
                     {/* <View style={styles.viewComments}>
@@ -447,23 +484,7 @@ const styles = StyleSheet.create({
       // alignSelf: "center",
     },
 
-    // viewTitleStatus: {
-    //   // flex: 1,
-    //   flexDirection: "row",
-    //   justifyContent: "space-between",
-    //   paddingVertical: 20,
-    //   paddingHorizontal: 20,
-    //   marginBottom: 20,
-    //   backgroundColor: "#EEEEEE",
-    // },
-    // projectName: {
-    //   fontSize: 18,
-    //   fontWeight: 'bold',
-    //   color: '#333',
-    // },
-  
     viewProjectContent: {
-      // width: '80%',
       paddingHorizontal: 20,
     },
 
@@ -479,7 +500,6 @@ const styles = StyleSheet.create({
       marginBottom: 10,
     },
     detailsProgress: {
-      // alignSelf:'center',
     },
 
     viewProgress: {
@@ -489,6 +509,9 @@ const styles = StyleSheet.create({
   
     },
   
+    stepList: {
+
+    },
     viewElement: {
       elevation: 2,
       backgroundColor: '#FFF',

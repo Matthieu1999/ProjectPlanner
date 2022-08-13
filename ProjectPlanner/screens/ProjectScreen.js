@@ -34,6 +34,7 @@ const ProjectScreen = () => {
 
   // ARRAYS FOR READS FROM FIRESTORE
   const [allProjects, setAllProjects] = useState([]);
+  const [gotProject, setGotProject] = useState(false)
 
   // NOT USED YET
   const [date, setDate] = useState(new Date())
@@ -52,10 +53,6 @@ const ProjectScreen = () => {
       readProject(auth.currentUser.uid)
     }
   }
-
-  // navigation.addListener('focus', () => {
-  //   readProject()
-  // });
 
   async function createProject() {
     let color = ""
@@ -96,6 +93,7 @@ const ProjectScreen = () => {
     getAllProjects.push({ ...doc.data(), key: doc.id });
     });
     setAllProjects(getAllProjects);
+    setGotProject(true)
   }
 
 
