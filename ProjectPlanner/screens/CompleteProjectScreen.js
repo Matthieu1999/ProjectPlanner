@@ -66,11 +66,6 @@ const CompleteProjectScreen = () => {
       readAllSteps()
     }
   }
-
-  // async function refreshProject() {
-  //   const projRef = await getDoc(doc(db, "Projects", Project.key))
-  //   const { Project } = projRef
-  // }
     
   async function readCompleteProject() {
     
@@ -83,8 +78,9 @@ const CompleteProjectScreen = () => {
     setModalAddStepVisible(false)
     const newStep = await addDoc(collection(db, "Projects", Project.key, "Steps"), {
       stepName: stepName,
-      stepStatus: "Not Done",
+      // stepStatus: "Not Done",
       stepDeadline: "stepDeadline",
+      isChecked: false,
     });
     readAllSteps()
   }
@@ -119,7 +115,6 @@ const CompleteProjectScreen = () => {
     });
     setModalModifyDescriptionVisible(false)
     setProjectDescription(modProjDesc)
-    // refreshProject()
   }
 
   const deleteAlert = (item) =>
@@ -146,10 +141,22 @@ const CompleteProjectScreen = () => {
   }
 
   async function checkStep(item) {
-      await updateDoc(doc(db, "Projects", ))
+      if (item.isChecked == false) {
+        await updateDoc(doc(db, "Projects", Project.key, "Steps", item.key), {
+          isChecked: true,
+        });
+      }
+      if (item.isChecked == true) {
+        await updateDoc(doc(db, "Projects", Project.key, "Steps", item.key), {
+          isChecked: false,
+        });
+      }
+      readAllSteps()  
   }
-
   
+  async function progressionCount() {
+
+  }
 
   const renderStep = ({ item }) => (
     
@@ -308,7 +315,7 @@ const CompleteProjectScreen = () => {
 
                           <View style={styles.detailsElement}>
                             <Text style={styles.detailsElementTitle}>Progress</Text>
-                            <Progress.Circle style={styles.detailsProgress} showsText={true} progress={0.5} size={100} indeterminate={false} />
+                            <Progress.Circle style={styles.detailsProgress} showsText={true} progress={0.3} size={100} indeterminate={false} />
                           </View>
                         </View>
                     </View>
