@@ -7,8 +7,8 @@ import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setD
 import { onAuthStateChanged } from "firebase/auth";
 
 import {MaterialIcons, Ionicons } from '@expo/vector-icons';
-
 import { useNavigation, useRoute } from '@react-navigation/native';
+import * as Progress from 'react-native-progress';
 
 
 const CompleteProjectScreen = () => {
@@ -140,10 +140,16 @@ const CompleteProjectScreen = () => {
       ]
     )
 
-    async function deleteStep (item) {
-        await deleteDoc(doc(db, "Projects", Project.key, "Steps", item.key ))
-        readAllSteps()
-    }
+  async function deleteStep (item) {
+    await deleteDoc(doc(db, "Projects", Project.key, "Steps", item.key ))
+    readAllSteps()
+  }
+
+  async function checkStep(item) {
+      await updateDoc(doc(db, "Projects", ))
+  }
+
+  
 
   const renderStep = ({ item }) => (
     
@@ -155,7 +161,7 @@ const CompleteProjectScreen = () => {
     color: "black",
     borderRadius: 25,
     }}
-    onPress={() => {}}
+    onPress={() => checkStep(item)}
     onLongPress={() => deleteAlert(item)}
     >
         <Text>
@@ -294,9 +300,15 @@ const CompleteProjectScreen = () => {
                         <Text style={styles.Title}>Project Details</Text>
                       </View>
                         
-                        <View>
-                          <View>
-                            
+                        <View style={styles.projectDetailsView}>
+                          <View style={styles.detailsElement}>
+                            <Text style={styles.detailsElementTitle}>Deadline</Text>
+                            <Text style={styles.detailsElementItem}>{Project.projectDeadline}</Text>
+                          </View>
+
+                          <View style={styles.detailsElement}>
+                            <Text style={styles.detailsElementTitle}>Progress</Text>
+                            <Progress.Circle style={styles.detailsProgress} showsText={true} progress={0.5} size={100} indeterminate={false} />
                           </View>
                         </View>
                     </View>
@@ -405,25 +417,41 @@ const styles = StyleSheet.create({
       // alignSelf: "center",
     },
 
-    viewTitleStatus: {
-      // flex: 1,
-      flexDirection: "row",
-      justifyContent: "space-between",
-      paddingVertical: 20,
-      paddingHorizontal: 20,
-      marginBottom: 20,
-      backgroundColor: "#EEEEEE",
-    },
-    projectName: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      color: '#333',
-    },
+    // viewTitleStatus: {
+    //   // flex: 1,
+    //   flexDirection: "row",
+    //   justifyContent: "space-between",
+    //   paddingVertical: 20,
+    //   paddingHorizontal: 20,
+    //   marginBottom: 20,
+    //   backgroundColor: "#EEEEEE",
+    // },
+    // projectName: {
+    //   fontSize: 18,
+    //   fontWeight: 'bold',
+    //   color: '#333',
+    // },
   
     viewProjectContent: {
       // width: '80%',
       paddingHorizontal: 20,
     },
+
+    projectDetailsView: {
+      flexDirection: 'row',
+      justifyContent:'space-around',
+    },
+    detailsElement: {
+      textAlign: 'center',
+    },
+    detailsElementTitle: {
+      textAlign: 'center',
+      marginBottom: 10,
+    },
+    detailsProgress: {
+      // alignSelf:'center',
+    },
+
     viewProgress: {
   
     },
