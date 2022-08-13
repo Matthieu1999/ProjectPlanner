@@ -42,6 +42,10 @@ const CompleteProjectScreen = () => {
 
   const [step, setStep] = useState({})
 
+  const [checkedCount, setCheckedCount] = useState()
+  const [allCount, setAllCount] = useState()
+  const [percentSteps, setPercentSteps] = useState()
+
   // ARRAYS FOR READS FROM FIRESTORE
   const [allSteps, setAllSteps] = useState([]);
 
@@ -55,8 +59,10 @@ const CompleteProjectScreen = () => {
       }
     });
     navigation.setOptions({
-        title: Project.projectName,
-      });
+      title: Project.projectName,
+    });
+    readAllSteps()
+    
   }, [])
 
   async function getCurrentUser() {
@@ -64,6 +70,7 @@ const CompleteProjectScreen = () => {
       setCurrentUser(auth.currentUser.uid);
       readCompleteProject()
       readAllSteps()
+      
     }
   }
     
@@ -92,6 +99,7 @@ const CompleteProjectScreen = () => {
     getAllSteps.push({ ...doc.data(), key: doc.id });
     });
     setAllSteps(getAllSteps);
+    progressionCount()
   }
 
   function funcToModifyStep (item) {
@@ -151,11 +159,25 @@ const CompleteProjectScreen = () => {
           isChecked: false,
         });
       }
-      readAllSteps()  
+      readAllSteps()
   }
-  
-  async function progressionCount() {
 
+  async function progressionCount() {
+    const getCheckedSteps = query(collection(db, "Projects", Project.key, "Steps"), where("isChecked", "==", true));
+    const checkedStepsResult = await getDocs(getCheckedSteps);
+
+    const getSteps = await getDocs(collection(db, "Projects", Project.key, "Steps"))
+
+    if (checkedStepsResult.size == 0 || getSteps.size == 0) {
+
+    }
+    else {
+      setCheckedCount(checkedStepsResult.size)
+      setAllCount(getSteps.size)
+      setPercentSteps(Number((checkedCount/allCount).toFixed(2)))
+    }
+
+    
   }
 
   const renderStep = ({ item }) => (
@@ -310,12 +332,19 @@ const CompleteProjectScreen = () => {
                         <View style={styles.projectDetailsView}>
                           <View style={styles.detailsElement}>
                             <Text style={styles.detailsElementTitle}>Deadline</Text>
-                            <Text style={styles.detailsElementItem}>{Project.projectDeadline}</Text>
+                            <Text style={styles.detailsElementItem}>{percentSteps}</Text>
                           </View>
 
                           <View style={styles.detailsElement}>
                             <Text style={styles.detailsElementTitle}>Progress</Text>
-                            <Progress.Circle style={styles.detailsProgress} showsText={true} progress={0.3} size={100} indeterminate={false} />
+                            <Progress.Circle style={styles.detailsProgress}
+                            showsText={true}
+                            progress={percentSteps}
+                            size={100}
+                            indeterminate={false}
+                            animated={false}
+                            />
+                            
                           </View>
                         </View>
                     </View>

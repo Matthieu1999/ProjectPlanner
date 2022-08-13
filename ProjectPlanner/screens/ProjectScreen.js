@@ -53,9 +53,9 @@ const ProjectScreen = () => {
     }
   }
 
-  navigation.addListener('focus', () => {
-    readProject()
-  });
+  // navigation.addListener('focus', () => {
+  //   readProject()
+  // });
 
   async function createProject() {
     let color = ""
