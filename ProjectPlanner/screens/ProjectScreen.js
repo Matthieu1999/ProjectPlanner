@@ -147,6 +147,8 @@ const ProjectScreen = () => {
 
   return (
     <View style={styles.container}>
+
+      {/* PROJECTS FLATLIST */}
       <SafeAreaView style={styles.project}>
         <FlatList
         ListFooterComponent={<View style={{ flexGrow: 1, justifyContent: 'flex-end', marginTop: 80, }}/>}
@@ -158,16 +160,16 @@ const ProjectScreen = () => {
       </SafeAreaView>
 
       {/* Modal to create a project */}
-      <Modal style={styles.modalContainer}
+      <Modal style={styles.modal}
       animationType="slide"
       transparent={true}
       visible={modalCreateVisible}
       >
-        <View style={styles.modalView}>
+        <View style={styles.modalFullView}>
 
-          <View style={styles.completeView}>
-            <View style={styles.fieldViewOfModal}>
-              <Text style={styles.modalText}>Project name</Text>
+          <View style={styles.completeUpperView}>
+            <View style={styles.elementView}>
+              <Text style={styles.modalTitle}>Project name</Text>
               <TextInput
               placeholder="Name..."
               value={projectName}
@@ -176,8 +178,8 @@ const ProjectScreen = () => {
               ></TextInput>
             </View>
 
-            <View style={styles.fieldViewOfModal}>
-              <Text style={styles.modalText}>Project description</Text>
+            <View style={styles.elementView}>
+              <Text style={styles.modalTitle}>Project description</Text>
               <TextInput
               multiline
               numberOfLines={8}
@@ -188,10 +190,10 @@ const ProjectScreen = () => {
               ></TextInput>
             </View>
 
-            <View style={styles.fieldViewOfModal}>
-              <Text style={styles.modalText}>Category</Text>
+            <View style={styles.elementView}>
+              <Text style={styles.modalTitle}>Category</Text>
               <Picker
-              style={styles.picker}
+              style={styles.modalPicker}
               selectedValue={projectCategory}
               onValueChange={(itemValue, itemIndex) => setProjectCategory(itemValue)}
               >
@@ -202,27 +204,27 @@ const ProjectScreen = () => {
             </View>
 
             
-            <View style={styles.fieldViewOfModal}>
-              <Text style={styles.modalText}>Deadline</Text>
-              <Text>Coming Soon</Text>
+            <View style={styles.elementView}>
+              <Text style={styles.modalTitle}>Deadline</Text>
+              <Text style={styles.modalDatePicker}>Coming Soon</Text>
             </View>
           </View>
           
+          
           <View style={styles.btnContainer}>
             <Button
-            style={styles.btnModal}
+            style={styles.btn}
             onPress={() => setModalCreateVisible(false)}
             >
-              <Text style={styles.btnModalText}>Cancel</Text>
+              <Text style={styles.btnText}>Cancel</Text>
             </Button>
             <Button
-            style={styles.btnModal}
+            style={styles.btn}
             onPress={() => createProject()}
             >
-              <Text style={styles.btnModalText}>Add Project</Text>
+              <Text style={styles.btnText}>Add Project</Text>
             </Button>
           </View>
-
         </View>
       </Modal>
 
@@ -250,65 +252,15 @@ const styles = StyleSheet.create({
   },
 
   // Modal content project creation
-  modalContainer: {
-    flex: 1,
-    alignSelf: "center",
-  },
-  fieldViewOfModal: {
-    alignItems: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-    fontSize: 18,
-  },
-  inputText: {
-    backgroundColor: '#f2f3f3',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginBottom: 20,
-    width: '80%',
-  },
-  picker: {
-    width: '50%',
-    alignContent: "center",
-  },
-  btnContainer: {
-    flexDirection: 'row',
-    marginTop: 20,
-    justifyContent: 'center',
-  },
-  btnModal: {
-    borderWidth: 1,
-    borderColor: 'blue',
-    margin: 10,
-  },
-  btnModalText: {
-    color: 'blue',
-  },
+  modal: {
 
-  projectContainer: {
-    flex: 1,
   },
-
-  projectList: {
-    // marginBottom: 80,
-  },
-
-
-  // Modal to add new step
-  modalContent:{
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalView: {
-    width: '80%',
+  modalFullView: {
+    width: '90%',
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 25,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -318,21 +270,124 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
+  completeUpperView: {
+
+  },
+  elementView: {
+    
+  },
+  modalTitle: {
+    marginBottom: 15,
+    fontSize: 18,
+    alignSelf: 'center',
+  },
   inputText: {
+  backgroundColor: '#f2f3f3',
+  paddingHorizontal: 15,
+  paddingVertical: 10,
+  borderRadius: 10,
+  marginBottom: 20,
+  width: '100%',
+  elevation: 1,
+  },
+  modalPicker: {
+    width: '80%',
+    alignSelf: 'center',
+    elevation: 1,
     backgroundColor: '#f2f3f3',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
     marginBottom: 20,
   },
-  btnModalContainer: {
+  modalDatePicker: {
+    alignSelf: 'center',
+    marginBottom: 40,
+  },
+  btnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
-  btnModal: {
+  btn: {
     borderWidth: 1,
-    padding: 10,
+    borderColor: 'blue',
+    margin: 10,
   },
+  btnText: {
+    color: 'blue',
+  },
+
+  // fieldViewOfModal: {
+  //   alignItems: "center",
+  // },
+  // modalText: {
+  //   marginBottom: 15,
+  //   fontSize: 18,
+  // },
+  // inputText: {
+  //   backgroundColor: '#f2f3f3',
+  //   paddingHorizontal: 15,
+  //   paddingVertical: 10,
+  //   borderRadius: 10,
+  //   marginBottom: 20,
+  //   width: '80%',
+  // },
+  // picker: {
+  //   width: '50%',
+  //   alignContent: "center",
+  // },
+  // btnContainer: {
+  //   flexDirection: 'row',
+  //   marginTop: 20,
+  //   justifyContent: 'center',
+  // },
+  // btnModal: {
+  //   borderWidth: 1,
+  //   borderColor: 'blue',
+  //   margin: 10,
+  // },
+  // btnModalText: {
+  //   color: 'blue',
+  // },
+
+  // projectContainer: {
+  //   flex: 1,
+  // },
+
+
+  // Modal to add new step
+  // modalView:{
+  //   flex: 1,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
+  // completeView: {
+  //   width: '80%',
+  //   margin: 20,
+  //   backgroundColor: "white",
+  //   borderRadius: 20,
+  //   padding: 35,
+  //   shadowColor: "#000",
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 2
+  //   },
+  //   shadowOpacity: 0.25,
+  //   shadowRadius: 4,
+  //   elevation: 5
+  // },
+  // inputText: {
+  //   backgroundColor: '#f2f3f3',
+  //   paddingHorizontal: 15,
+  //   paddingVertical: 10,
+  //   borderRadius: 10,
+  //   marginBottom: 20,
+  // },
+  // btnModalContainer: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-evenly',
+  // },
+  // btnModal: {
+  //   borderWidth: 1,
+  //   padding: 10,
+  // },
 
   // FAB styling
   fab: {

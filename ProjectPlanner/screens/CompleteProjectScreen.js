@@ -70,7 +70,6 @@ const CompleteProjectScreen = () => {
       setCurrentUser(auth.currentUser.uid);
       readCompleteProject()
       readAllSteps()
-      
     }
   }
     
@@ -168,7 +167,7 @@ const CompleteProjectScreen = () => {
 
     const getSteps = await getDocs(collection(db, "Projects", Project.key, "Steps"))
 
-    if (checkedStepsResult.size == 0 || getSteps.size == 0) {
+    if (getSteps.size == 0) {
 
     }
     else {
@@ -210,32 +209,32 @@ const CompleteProjectScreen = () => {
       >
 
         <View style={styles.modalContent}>
-            <View style={styles.modalView}>
-              <Text style={styles.Title}>Add a new step</Text>
-              <TextInput
-              placeholder="Step name..."
-              onChangeText={text => setStepName(text)}
-              style={styles.inputText}
-              >
-              </TextInput>
+          <View style={styles.modalView}>
+            <Text style={styles.Title}>Add a new step</Text>
+            <TextInput
+            placeholder="Step name..."
+            onChangeText={text => setStepName(text)}
+            style={styles.inputText}
+            >
+            </TextInput>
 
-              <View style={styles.btnModalContainer}>
-                <TouchableOpacity
-                style={styles.btnModal}
-                onPress={() => setModalAddStepVisible(false)}
-                >
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
+            <View style={styles.btnModalContainer}>
+              <TouchableOpacity
+              style={styles.btnModal}
+              onPress={() => setModalAddStepVisible(false)}
+              >
+                <Text>Cancel</Text>
+              </TouchableOpacity>
               
-                <TouchableOpacity
-                style={styles.btnModal}
-                onPress={() => createStep()}
-                >
-                  <Text>Save</Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+              style={styles.btnModal}
+              onPress={() => createStep()}
+              >
+                <Text>Save</Text>
+              </TouchableOpacity>
             </View>
           </View>
+        </View>
 
       </Modal>
 
