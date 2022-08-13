@@ -174,9 +174,7 @@ const CompleteProjectScreen = () => {
       setCheckedCount(checkedStepsResult.size)
       setAllCount(getSteps.size)
       setPercentSteps(Number((checkedCount/allCount).toFixed(2)))
-    }
-
-    
+    }   
   }
 
   const renderStep = ({ item }) => (
@@ -374,15 +372,12 @@ const CompleteProjectScreen = () => {
                                 <Ionicons name="add-circle-outline" size={25}/>
                             </TouchableOpacity>
                         </View>
-
-                        {/* <SafeAreaView style={styles.step}> */}
                             <FlatList
                             style={styles.stepList}
                             data={allSteps}
                             renderItem={renderStep}
                             keyExtractor={item => item.key}
                             />
-                        {/* </SafeAreaView> */}
                     </View>
 
                     {/* COMMENTS */}
