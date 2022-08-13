@@ -53,6 +53,10 @@ const ProjectScreen = () => {
     }
   }
 
+  navigation.addListener('focus', () => {
+    readProject()
+  });
+
   async function createProject() {
     let color = ""
     if(projectCategory === 'Personal') {

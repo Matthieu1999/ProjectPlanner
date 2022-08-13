@@ -24,6 +24,7 @@ const CompleteProjectScreen = () => {
   // MODAL VISIBILITY STATE
   const [modalAddStepVisible, setModalAddStepVisible] = useState(false)
   const [modalModifyStepVisible, setModalModifyStepVisible] = useState(false)
+  const [modalModifyDescriptionVisible, setModalModifyDescriptionVisible] = useState(false)
 
   // PROJECT VALUES
   const [projectName, setProjectName] = useState('')
@@ -32,10 +33,14 @@ const CompleteProjectScreen = () => {
   const [projectCompletion, setProjectCompletion] = useState('')
   const [projectDeadline, setProjectDeadline] = useState(new Date())
 
+  const [modProjDesc, setModProjDesc] = useState('')
+
   // STEP VALUES
   const [stepName, setStepName] = useState('')
   const [stepStatus, setStepStatus] = useState('')
   const [stepDeadline, setStepDeadline] = useState(new Date())
+
+  const [step, setStep] = useState({})
 
   // ARRAYS FOR READS FROM FIRESTORE
   const [allSteps, setAllSteps] = useState([]);
@@ -61,7 +66,18 @@ const CompleteProjectScreen = () => {
       readAllSteps()
     }
   }
+
+  // async function refreshProject() {
+  //   const projRef = await getDoc(doc(db, "Projects", Project.key))
+  //   const { Project } = projRef
+  // }
     
+  async function readCompleteProject() {
+    
+    setProjectName(Project.projectName)
+    setProjectDescription(Project.projectDescription)
+    setProjectStatus(Project.projectStatus)
+  }
 
   async function createStep () {
     setModalAddStepVisible(false)
@@ -73,13 +89,6 @@ const CompleteProjectScreen = () => {
     readAllSteps()
   }
 
-  async function readCompleteProject() {
-    
-    setProjectName(Project.projectName)
-    setProjectDescription(Project.projectDescription)
-    setProjectStatus(Project.projectStatus)
-  }
-
   async function readAllSteps () {
     const getAllSteps = [];
     const querySnapshot = await getDocs(collection(db, "Projects", Project.key, "Steps"));
@@ -89,17 +98,41 @@ const CompleteProjectScreen = () => {
     setAllSteps(getAllSteps);
   }
 
+  function funcToModifyStep (item) {
+    setModalModifyStepVisible(true)
+    setStepName(item.stepName)
+    setStep(item)
+  }
+
+  async function modifyStep () {
+    await updateDoc(doc(db, "Projects", Project.key, "Steps", step.key), {
+      stepName: stepName,
+    });
+    setModalModifyStepVisible(false)
+    readAllSteps()
+    
+  }
+
+  async function modifyDescription() {
+    await updateDoc(doc(db, "Projects", Project.key), {
+      projectDescription: modProjDesc,
+    });
+    setModalModifyDescriptionVisible(false)
+    setProjectDescription(modProjDesc)
+    // refreshProject()
+  }
+
   const deleteAlert = (item) =>
     Alert.alert(
       "Modify / Delete?",
       "Modify or delete the step named '" + item.stepName + "'?",
       [
         {
-            text: "Keep it",
+            text: "Cancel",
             style: "cancel"
         },
         {
-            text: "Modify", onPress: () => setModalModifyStepVisible(true)
+            text: "Modify", onPress: () => funcToModifyStep(item)
         },
         { 
             text: "Delete", onPress: () => deleteStep(item) 
@@ -182,7 +215,7 @@ const CompleteProjectScreen = () => {
             <View style={styles.modalView}>
               <Text style={styles.Title}>Modify Step</Text>
               <TextInput
-              text="New step name..."
+              value={stepName}
               onChangeText={text => setStepName(text)}
               style={styles.inputText}
               >
@@ -209,18 +242,20 @@ const CompleteProjectScreen = () => {
       </Modal>
 
       {/* Modal modify the project description */}
-      {/* <Modal style={styles.modalContainer}
+      <Modal style={styles.modalContainer}
       animationType="slide"
       transparent={true}
-      visible={modalModifyStepVisible}
+      visible={modalModifyDescriptionVisible}
       >
 
         <View style={styles.modalContent}>
             <View style={styles.modalView}>
-              <Text style={styles.Title}>Modify Step</Text>
+              <Text style={styles.Title}>Modify Description</Text>
               <TextInput
-              text="New step name..."
-              onChangeText={text => setStepName(text)}
+              multiline
+              numberOfLines={8}
+              value={modProjDesc}
+              onChangeText={text => setModProjDesc(text)}
               style={styles.inputText}
               >
               </TextInput>
@@ -228,14 +263,14 @@ const CompleteProjectScreen = () => {
               <View style={styles.btnModalContainer}>
                 <TouchableOpacity
                 style={styles.btnModal}
-                onPress={() => setModalAddStepVisible(false)}
+                onPress={() => setModalModifyDescriptionVisible(false)}
                 >
                   <Text>Cancel</Text>
                 </TouchableOpacity>
               
                 <TouchableOpacity
                 style={styles.btnModal}
-                onPress={() => modifyStep()}
+                onPress={() => modifyDescription()}
                 >
                   <Text>Save</Text>
                 </TouchableOpacity>
@@ -243,22 +278,27 @@ const CompleteProjectScreen = () => {
             </View>
           </View>
 
-      </Modal> */}
+      </Modal>
 
       {/* Project Complete View */}
-      
         <SafeAreaView>
 
             <ScrollView style={styles.viewCompleteProject}>
 
                 <View style={styles.viewProjectContent}>
 
-                    <View style={styles.viewProgress}>
-                        {/* progress bar depending on the steps that are finished */}
-                    </View>
 
-                    <View style={styles.viewDeadline}>
-                        <Text style={styles.projectDeadlineTitle}>Deadline</Text>
+                    {/* PROJECT DETAILS => deadline, status, percent and progress bar */}
+                    <View style={styles.viewElement}>
+                      <View style={styles.specHeader}>
+                        <Text style={styles.Title}>Project Details</Text>
+                      </View>
+                        
+                        <View>
+                          <View>
+                            
+                          </View>
+                        </View>
                     </View>
 
                     {/* DESCRIPTION */}
@@ -266,7 +306,9 @@ const CompleteProjectScreen = () => {
 
                         <View style={styles.specHeader}>
                             <Text style={styles.Title}>Description</Text>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                            onPress={() => [setModalModifyDescriptionVisible(true), setModProjDesc(Project.projectDescription)]}
+                            >
                                 <Ionicons name="ios-create-outline" size={25}/>
                             </TouchableOpacity>
                         </View>
@@ -297,12 +339,14 @@ const CompleteProjectScreen = () => {
                     </View>
 
                     {/* COMMENTS */}
-                    <View style={styles.viewComments}>
+                    {/* <View style={styles.viewComments}>
                         <Text style={styles.projectCommentsTitle}>Comments</Text>
-                    </View>
+                    </View> */}
+
                 </View>
             </ScrollView>
         </SafeAreaView>
+
     </View>
     )
 
