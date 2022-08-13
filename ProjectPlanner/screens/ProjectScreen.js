@@ -34,17 +34,21 @@ const ProjectScreen = () => {
 
   // ARRAYS FOR READS FROM FIRESTORE
   const [allProjects, setAllProjects] = useState([]);
-  const [gotProject, setGotProject] = useState(false)
 
   // NOT USED YET
   const [date, setDate] = useState(new Date())
 
+
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user !== null) {
+      onAuthStateChanged(auth, (user) => {
+        if (user !== null) {
+          getCurrentUser()
+        }
+      });
+      const unsubscribe = navigation.addListener('focus', () => {
         getCurrentUser()
-      }
-    });
+      });
+      return unsubscribe;
   }, [])
 
   async function getCurrentUser() {
@@ -93,9 +97,7 @@ const ProjectScreen = () => {
     getAllProjects.push({ ...doc.data(), key: doc.id });
     });
     setAllProjects(getAllProjects);
-    setGotProject(true)
   }
-
 
   const deleteAlert = (item) =>
     Alert.alert(

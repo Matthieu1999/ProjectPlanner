@@ -23,7 +23,7 @@ const LoginScreen = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        navigation.replace("Home")
+        navigation.replace("Projects")
       }
     })
     return unsubscribe;
@@ -117,7 +117,7 @@ const LoginScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.socialButtonContainer}>
+        {/* <View style={styles.socialButtonContainer}>
         <TouchableOpacity
         disabled={true} 
         onPress={googleAuth}
@@ -132,7 +132,7 @@ const LoginScreen = () => {
           </View>
           
         </TouchableOpacity>
-        </View>
+        </View> */}
         
       </View>
     </View>

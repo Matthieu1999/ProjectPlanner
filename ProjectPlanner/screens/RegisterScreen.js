@@ -32,7 +32,7 @@ const RegisterScreen = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        navigation.navigate("Home")
+        navigation.navigate("Projects")
       }
     })
     return unsubscribe;
@@ -119,7 +119,7 @@ const RegisterScreen = () => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
         disabled={true}
         onPress={googleAuth}
         style={[styles.googleButton, styles.googleButtonOutline]}
@@ -132,7 +132,7 @@ const RegisterScreen = () => {
           </Text>
           </View>
           
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
       </View>
     </View>

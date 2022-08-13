@@ -325,7 +325,7 @@ const CompleteProjectScreen = () => {
                         <View style={styles.projectDetailsView}>
                           <View style={styles.detailsElement}>
                             <Text style={styles.detailsElementTitle}>Deadline</Text>
-                            <Text style={styles.detailsElementItem}>{percentSteps}</Text>
+                            <Text style={styles.detailsElementItem}>Coming soon</Text>
                           </View>
 
                           <View style={styles.detailsElement}>

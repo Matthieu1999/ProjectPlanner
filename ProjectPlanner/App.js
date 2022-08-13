@@ -42,18 +42,20 @@ function MyDrawer() {
     }}
     >
       <Drawer.Screen options={{
-        headerTitle: 'Home',
+        headerTitle: 'Projects',
         headerTitleAlign: 'center',
         drawerIcon: ({color}) => (
           <Ionicons name="home-outline" size={22} color={color}/>
         )
-      }} name="Homepage" component={HomeScreen} />
-      <Drawer.Screen options={{
-        headerTitleAlign: 'center',
-        drawerIcon: ({color}) => (
-          <Ionicons name="analytics-outline" size={22} color={color}/>
-        )
-      }} name="Projects" component={ProjectScreen} />
+      }} 
+      // name="Homepage" component={HomeScreen} />
+      // <Drawer.Screen options={{
+      //   headerTitleAlign: 'center',
+      //   drawerIcon: ({color}) => (
+      //     <Ionicons name="analytics-outline" size={22} color={color}/>
+      //   )
+      // }} 
+      name="Project" component={ProjectScreen} />
       <Drawer.Screen options={{
         headerTitleAlign: 'center',
         drawerIcon: ({color}) => (
@@ -95,7 +97,7 @@ export default function App() {
         headerTitleAlign: 'center',
          }} name="Register" component={RegisterScreen} />
         <Stack.Screen options={{ headerShown: false,
-        }} name="Home" component={MyDrawer} />
+        }} name="Projects" component={MyDrawer} />
         <Stack.Screen options={{headerShown: true,
         headerTitleAlign: 'center',
         }} name="CompleteProject" component={CompleteProjectScreen}/>
