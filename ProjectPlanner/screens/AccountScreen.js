@@ -15,6 +15,7 @@ const AccountScreen = () => {
   const [email, setEmail] = useState('')
 
   const [modalUsernameVisible, setModalUsernameVisible] = useState(false)
+  const [modalAlertUsername, setModalAlertUsername] = useState(false)
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -33,11 +34,17 @@ const AccountScreen = () => {
   }
 
   async function updateUsername() {
-    await updateDoc(doc(db, "Users", email), {
-      displayName:userNameModal
-    }); 
-    getCurrentUser()
-    setModalUsernameVisible(false)
+    if (userNameModal === "") {
+      setModalUsernameVisible(false)
+      setModalAlertUsername(true)
+    }
+    else {
+      await updateDoc(doc(db, "Users", email), {
+        displayName:userNameModal
+      }); 
+      getCurrentUser()
+      setModalUsernameVisible(false)
+    }
   };
 
   async function readUsername(userEmail) {
@@ -77,7 +84,7 @@ const AccountScreen = () => {
         {/* Modal to modify the username */}
         <Modal style={styles.modal}
         transparent={true}
-        animationType="slide"
+        animationType="none"
         visible={modalUsernameVisible}
         >
           <View style={styles.modalContent}>
@@ -107,6 +114,28 @@ const AccountScreen = () => {
             </View>
           </View>
         </Modal>
+
+        {/* Modal alert username */}
+      <Modal style={styles.modalContainer}
+      animationType="none"
+      transparent={true}
+      visible={modalAlertUsername}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Warning</Text>
+            <Text style={styles.message}>Username cannot be empty!</Text>
+            <View style={styles.btnModalContainer}>
+              <TouchableOpacity
+              style={styles.btnModal}
+              onPress={() => [setModalAlertUsername(false), setModalUsernameVisible(true)]}
+              >
+                <Text style={styles.btnText}>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       
 
     </View>

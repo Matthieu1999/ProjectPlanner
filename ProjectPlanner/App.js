@@ -44,15 +44,7 @@ function MyDrawer() {
         drawerIcon: ({color}) => (
           <Ionicons name="home-outline" size={22} color={color}/>
         )
-      }} 
-      // name="Homepage" component={HomeScreen} />
-      // <Drawer.Screen options={{
-      //   headerTitleAlign: 'center',
-      //   drawerIcon: ({color}) => (
-      //     <Ionicons name="analytics-outline" size={22} color={color}/>
-      //   )
-      // }} 
-      name="Project" component={ProjectScreen} />
+      }} name="Project" component={ProjectScreen} />
       <Drawer.Screen options={{
         headerTitleAlign: 'center',
         drawerIcon: ({color}) => (
@@ -72,10 +64,8 @@ function MyDrawer() {
         )
       }} name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>
-    
   );
 }
-
 
 export default function App() {
   
@@ -84,7 +74,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen options={{ headerShown: true,
         headerTitleAlign: 'center',
-        }} name="Login" component={LoginScreen} />
+        }} name="ProjectPlanner" component={LoginScreen} />
         <Stack.Screen options={{ headerShown: false,
         }} name="Projects" component={MyDrawer} />
         <Stack.Screen options={{headerShown: true,
@@ -95,6 +85,4 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  
-});
+const styles = StyleSheet.create({});
