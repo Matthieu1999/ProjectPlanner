@@ -22,7 +22,7 @@ export function CustomDrawer(props) {
     const handleSignOut = () => {
         signOut(auth)
           .then(() => {
-            navigation.replace("Login")
+            navigation.replace("ProjectPlanner")
           })
           .catch(error => alert(error.message))
       }
