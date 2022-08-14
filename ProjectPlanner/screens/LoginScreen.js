@@ -1,17 +1,10 @@
 import 'react-native-gesture-handler';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { auth, app, db } from '../firebase'
-import { 
-  signInWithEmailAndPassword,
-  GoogleAuthProvider, 
-  signInWithRedirect,
-  getRedirectResult} from "firebase/auth";
+import { auth, db } from '../firebase'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword,} from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
-
-import { Ionicons } from '@expo/vector-icons'
-
-// let dateLogin;
+import { setDoc, doc } from "firebase/firestore";
 
 const LoginScreen = () => {
 
@@ -30,52 +23,41 @@ const LoginScreen = () => {
   }, [])
 
   const handleLogin = () => {
+    if(email ) {
+
+    }
+
     signInWithEmailAndPassword(auth, email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
-        // console.log('Logged in with: ', user.email);
       })
       .catch(error => alert(error.message))
   }
 
-  const provider = new GoogleAuthProvider();
-
-  const googleAuth = () => {
-
-    signInWithRedirect(auth, provider)
-
-    getRedirectResult(auth)
-    .then((result) => {
-    // This gives you a Google Access Token. You can use it to access Google APIs.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-
-    // The signed-in user info.
-    const user = result.user;
-    }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-    });
-    // dateLogin = new Date();
-    // signInWithPopup(auth, provider)
-    // .then((result) => {
-    //   const user = result.user;
-    //   console.log('Logged in with: ', user.email);
-    // })
-    // .catch(error => alert(error.message))
+  const handleSignUp = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+    .then(userCredentials => {
+      const user = userCredentials.user;
+      createUserFirestore(user.uid)
+    })
+    .catch(error => alert(error.message))
   }
+
+  async function createUserFirestore(uid) {
+    try {
+      await setDoc(doc(db, "Users", email.toLowerCase()), {
+        userId: uid,
+        displayName: "",
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
 
   return (
     
     <View
     style={styles.container}
-    // behavior="padding"
     >
       <KeyboardAvoidingView style={styles.inputContainer}>
         <TextInput
@@ -99,11 +81,11 @@ const LoginScreen = () => {
       <View style={styles.buttonContainer}>
         <View style={styles.nrmlButtonContainer}>
           <TouchableOpacity
-          onPress={() => navigation.navigate('Register')}
+          onPress={handleSignUp}
           style={styles.buttonSignUp}
           >
             <Text style={styles.buttonOutlineText}>
-              Sign up
+              Register
             </Text>
           </TouchableOpacity>
 
@@ -116,23 +98,6 @@ const LoginScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
-
-        {/* <View style={styles.socialButtonContainer}>
-        <TouchableOpacity
-        disabled={true} 
-        onPress={googleAuth}
-        style={styles.googleButton}
-        >
-          <View style={styles.buttonWithIcon}>
-          <Ionicons style={styles.icon} name="logo-google"/>
-          
-          <Text style={styles.googleButtonOutlineText}>
-            Continue with Google
-          </Text>
-          </View>
-          
-        </TouchableOpacity>
-        </View> */}
         
       </View>
     </View>

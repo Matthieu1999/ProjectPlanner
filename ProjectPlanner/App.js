@@ -10,8 +10,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { auth, app, db } from './firebase'
 
 import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen';
-import HomeScreen from './screens/HomeScreen';
+// import HomeScreen from './screens/HomeScreen';
 import ProjectScreen from './screens/ProjectScreen';
 import AccountScreen from './screens/AccountScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -21,8 +20,6 @@ import { CustomDrawer } from './components/CustomDrawer';
 
 import {Ionicons, SimpleLineIcons} from '@expo/vector-icons'
 import { useState } from 'react';
-
-import darkMode from './styles/darkMode';
 
 
 const Stack = createNativeStackNavigator();
@@ -81,11 +78,6 @@ function MyDrawer() {
 
 
 export default function App() {
-
-  const [theme, setTheme] = useState(Appearance.getColorScheme())
-  Appearance.addChangeListener((scheme) => {
-    console.log(scheme.colorScheme)
-  })
   
   return (
     <NavigationContainer>
@@ -93,9 +85,6 @@ export default function App() {
         <Stack.Screen options={{ headerShown: true,
         headerTitleAlign: 'center',
         }} name="Login" component={LoginScreen} />
-        <Stack.Screen options={{ headerShown: true,
-        headerTitleAlign: 'center',
-         }} name="Register" component={RegisterScreen} />
         <Stack.Screen options={{ headerShown: false,
         }} name="Projects" component={MyDrawer} />
         <Stack.Screen options={{headerShown: true,
