@@ -32,7 +32,7 @@ const CompleteProjectScreen = () => {
   const [projectDescription, setProjectDescription] = useState('')
   const [projectStatus, setProjectStatus] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
-  const [projectDeadline, setProjectDeadline] = useState(new Date())
+  const [projectDeadline, setProjectDeadline] = useState("")
 
   const [modProjDesc, setModProjDesc] = useState('')
 
@@ -74,6 +74,9 @@ const CompleteProjectScreen = () => {
     setProjectName(Project.projectName)
     setProjectDescription(Project.projectDescription)
     setProjectStatus(Project.projectStatus)
+
+    
+    setProjectDeadline(Project.projectDeadline)
   }
 
   async function createStep () {
@@ -123,18 +126,9 @@ const CompleteProjectScreen = () => {
     Alert.alert(
       "Modify / Delete?",
       "Modify or delete the step named '" + item.stepName + "'?",
-      [
-        {
-            text: "Cancel",
-            style: "cancel"
-        },
-        {
-            text: "Modify", onPress: () => funcToModifyStep(item)
-        },
-        { 
-            text: "Delete", onPress: () => deleteStep(item) 
-        }
-      ]
+      [{ text: "Cancel", style: "cancel"},
+        {text: "Modify", onPress: () => funcToModifyStep(item)},
+        { text: "Delete", onPress: () => deleteStep(item)}]
     )
 
   async function deleteStep (item) {
@@ -142,16 +136,19 @@ const CompleteProjectScreen = () => {
     readAllSteps()
   }
 
+  const [colorCheck, setColorCheck] = useState('#f0f0f5')
   async function checkStep(item) {
       if (item.isChecked == false) {
         await updateDoc(doc(db, "Projects", Project.key, "Steps", item.key), {
           isChecked: true,
         });
+        setColorCheck("green")
       }
       if (item.isChecked == true) {
         await updateDoc(doc(db, "Projects", Project.key, "Steps", item.key), {
           isChecked: false,
         });
+        setColorCheck("#f0f0f5")
       }
       readAllSteps()
   }
@@ -168,25 +165,6 @@ const CompleteProjectScreen = () => {
       });
     }   
   }
-
-  // const renderStep = ({ item }) => (
-    
-  //   <TouchableOpacity style={{
-  //   elevation: 2,
-  //   backgroundColor: '#f0f0f5',
-  //   marginVertical: 10,
-  //   padding: 15,
-  //   color: "black",
-  //   borderRadius: 25,
-  //   }}
-  //   onPress={() => checkStep(item)}
-  //   onLongPress={() => deleteAlert(item)}
-  //   >
-  //       <Text>
-  //           {item.stepName}
-  //       </Text>
-  //   </TouchableOpacity> 
-  // )
 
     return (
         <View style={styles.container}>
@@ -321,7 +299,7 @@ const CompleteProjectScreen = () => {
                         <View style={styles.projectDetailsView}>
                           <View style={styles.detailsElement}>
                             <Text style={styles.detailsElementTitle}>Deadline</Text>
-                            <Text style={styles.detailsElementItem}>Coming soon</Text>
+                            <Text style={styles.detailsElementItem}>{projectDeadline}</Text>
                           </View>
 
                           <View style={styles.detailsElement}>
@@ -364,22 +342,16 @@ const CompleteProjectScreen = () => {
                                 <Ionicons name="add-circle-outline" size={25}/>
                             </TouchableOpacity>
                         </View>
-                            {/* <FlatList
-                            style={styles.stepList}
-                            data={allSteps}
-                            renderItem={renderStep}
-                            keyExtractor={item => item.key}
-                            /> */}
                             {
                               allSteps.map((item) => ( 
                                 <ListItem
+                                component={TouchableOpacity}
+                                underlayColor="transparent"
                                 containerStyle={{
-                                paddingTop: 10,
-                                paddingRight: 10,
-                                paddingBottom: 10,
-                                borderBottomWidth: 10,
-                                borderColor:"white",
-                                backgroundColor: "#f0f0f5",
+                                padding: 10,
+                                marginVertical: 5,
+                                backgroundColor: colorCheck,
+                                borderRadius:10,
                                 }}
                                 
                                 onPress={() => checkStep(item)}

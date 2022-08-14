@@ -28,6 +28,10 @@ const ProjectScreen = () => {
   const [modalCreateVisible, setModalCreateVisible] = useState(false)
   const [modalDateVisible, setModalDateVisible] = useState(false)
 
+  // ALERT MODALS
+  const [modalAlertName, setModalAlertName] = useState(false)
+  const [modalAlertDesc, setModalAlertDesc] = useState(false)
+
   // PROJECT VALUES
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
@@ -75,7 +79,7 @@ const ProjectScreen = () => {
     }
   }
 
-  async function createProject(newDate) {
+  async function createProject() {
     let color = ""
     if(projectCategory === 'Personal') {
       color = '#cce6ff'
@@ -87,23 +91,33 @@ const ProjectScreen = () => {
       color = '#e6ffe6'
     }
 
-    setSelectedDate(newDate)
-    const newProject = await addDoc(collection(db, "Projects"), {
-      ownerId: currentUser,
-      projectName: projectName,
-      projectDescription: projectDescription,
-      isDeleted: false,
-      projectCategory: projectCategory,
-      projectCategoryColor: color,
-      projectSteps: [],
-      projectStatus: "Todo",
-      projectDeadline: selectedDate,
-      projectCompletion: 0,
-    });
-    setModalCreateVisible(false)
-    setProjectName("")
-    setProjectDescription("")
-    getCurrentUser()
+    // console.log(date)
+
+    if (projectName.length < 1 || projectName.length > 30) {
+      setModalAlertName(true)
+      setSelectedDate(date)
+    }
+    else if (projectDescription < 1) {
+      setModalAlertDesc(true)
+    }
+    else {
+      await addDoc(collection(db, "Projects"), {
+        ownerId: currentUser,
+        projectName: projectName,
+        projectDescription: projectDescription,
+        isDeleted: false,
+        projectCategory: projectCategory,
+        projectCategoryColor: color,
+        projectSteps: [],
+        projectStatus: "Todo",
+        projectDeadline: selectedDate,
+        projectCompletion: 0,
+      });
+      setModalCreateVisible(false)
+      setProjectName("")
+      setProjectDescription("")
+      await getCurrentUser()
+    }
   }
 
 
@@ -255,6 +269,7 @@ const ProjectScreen = () => {
         </View>
       </Modal>
 
+      {/* Modal datepicker */}
       <Modal style={styles.modalDate}
       animationType="fade"
       transparent={true}
@@ -290,7 +305,50 @@ const ProjectScreen = () => {
         </View>
       
       </Modal>
-      
+
+      {/* Modal alert project NAME */}
+      <Modal style={styles.modalContainer}
+      animationType="slide"
+      transparent={true}
+      visible={modalAlertName}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalView}>
+            <Text style={styles.Title}>Warning</Text>
+            <Text>Project name should be at least 3 charachters and maximum 30 charachters!</Text>
+            <View style={styles.btnModalContainer}>
+              <TouchableOpacity
+              style={styles.btnModal}
+              onPress={() => setModalAlertName(false)}
+              >
+                <Text>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal ALert project DESCRIPTION */}
+      <Modal style={styles.modalContainer}
+      animationType="slide"
+      transparent={true}
+      visible={modalAlertDesc}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalView}>
+            <Text style={styles.Title}>Warning</Text>
+            <Text>Project description cannot be empty!</Text>
+            <View style={styles.btnModalContainer}>
+              <TouchableOpacity
+              style={styles.btnModal}
+              onPress={() => setModalAlertDesc(false)}
+              >
+                <Text>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* FAB button to open the create project modal */}
       <FAB style={styles.fab}
@@ -344,6 +402,36 @@ const styles = StyleSheet.create({
   dateConfirmTxt: {
     padding: 10,
 
+  },
+
+  // Alert modals
+  modalContent:{
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    width: '80%',
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  btnModalContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  btnModal: {
+    borderWidth: 1,
+    padding: 10,
   },
 
   // Modal content project creation
