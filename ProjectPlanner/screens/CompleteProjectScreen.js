@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, Alert, Modal, FlatList, List, TextInput, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Alert, Modal, FlatList, List, TextInput, 
+  SafeAreaView, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { ListItem } from 'react-native-elements'
 

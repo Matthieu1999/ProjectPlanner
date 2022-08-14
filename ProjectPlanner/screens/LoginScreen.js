@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { auth, db } from '../firebase'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword,} from "firebase/auth";
@@ -11,7 +11,13 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const [modalAlert, setModalAlert] = useState(false)
+
+  const emailRgex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
   const navigation = useNavigation()
+
+  const [modalMsg, setModalMsg] = useState('')
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -23,24 +29,44 @@ const LoginScreen = () => {
   }, [])
 
   const handleLogin = () => {
-    if(email ) {
-
-    }
-
-    signInWithEmailAndPassword(auth, email, password)
+    if(emailRgex.test(email)) {
+      if (password.length > 5) {
+        signInWithEmailAndPassword(auth, email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
       })
       .catch(error => alert(error.message))
+      }
+      else {
+        setModalMsg('Your password should be at least 6 charachters! Try again!')
+        setModalAlert(true)
+      }
+    }
+    else {
+      setModalMsg('You email address is not valid! Try again!')
+      setModalAlert(true)
+    }
   }
 
   const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-    .then(userCredentials => {
-      const user = userCredentials.user;
-      createUserFirestore(user.uid)
-    })
-    .catch(error => alert(error.message))
+    if(emailRgex.test(email)) {
+      if (password.length > 5) {
+        createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredentials => {
+        const user = userCredentials.user;
+        createUserFirestore(user.uid)
+        })
+        .catch(error => alert(error.message))
+      }
+      else {
+        setModalMsg('Your password should be at least 6 charachters! Try again!')
+        setModalAlert(true)
+      }
+    }
+    else {
+      setModalMsg('You email address is not valid! Try again!')
+      setModalAlert(true)
+    }
   }
 
   async function createUserFirestore(uid) {
@@ -63,7 +89,7 @@ const LoginScreen = () => {
         <TextInput
         placeholder="Email"
         value={email}
-        onChangeText={text => setEmail(text)}
+        onChangeText={text => setEmail(text.trim())}
         style={styles.input}
         >
         </TextInput>
@@ -100,6 +126,33 @@ const LoginScreen = () => {
         </View>
         
       </View>
+
+
+      {/* Alert modal email */}
+      <Modal style={styles.modalContainer}
+      animationType="none"
+      transparent={true}
+      visible={modalAlert}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalView}>
+            <Text style={styles.Title}>Warning</Text>
+            <Text>{modalMsg}</Text>
+            <View style={styles.btnModalContainer}>
+              <TouchableOpacity
+              style={styles.btnModal}
+              onPress={() => setModalAlert(false)}
+              >
+                <Text>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
+
+
     </View>
   )
 }
@@ -190,5 +243,40 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#333',
   },
+
+    // Alert modals
+    modalContent:{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalView: {
+      width: '80%',
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+    },
+    btnModalContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+    },
+    btnModal: {
+      borderWidth: 1,
+      padding: 10,
+    },
+    Title: {
+      marginBottom: 10,
+      fontSize: 20,
+      color: '#333',
+    },
 
 })
