@@ -27,11 +27,15 @@ const CompleteProjectScreen = () => {
   const [modalModifyStepVisible, setModalModifyStepVisible] = useState(false)
   const [modalModifyDescriptionVisible, setModalModifyDescriptionVisible] = useState(false)
 
+  const [modalAlertStep, setModalAlertStep] = useState(false)
+  const [modalAlertStepModify, setModalAlertStepModify] = useState(false)
+
+  const [modalAlertDesc, setModalAlertDesc] = useState(false)
+
   // PROJECT VALUES
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
   const [projectStatus, setProjectStatus] = useState('')
-  const [projectCompletion, setProjectCompletion] = useState('')
   const [projectDeadline, setProjectDeadline] = useState("")
 
   const [modProjDesc, setModProjDesc] = useState('')
@@ -80,6 +84,11 @@ const CompleteProjectScreen = () => {
   }
 
   async function createStep () {
+    if (stepName < 1) {
+      setModalAlertStep(true)
+      setModalAddStepVisible(false)
+    }
+    else {
     setModalAddStepVisible(false)
     const newStep = await addDoc(collection(db, "Projects", Project.key, "Steps"), {
       stepName: stepName,
@@ -87,6 +96,7 @@ const CompleteProjectScreen = () => {
       isChecked: false,
     });
     readAllSteps()
+    }
   }
 
   async function readAllSteps () {
@@ -106,20 +116,32 @@ const CompleteProjectScreen = () => {
   }
 
   async function modifyStep () {
-    await updateDoc(doc(db, "Projects", Project.key, "Steps", step.key), {
-      stepName: stepName,
-    });
-    setModalModifyStepVisible(false)
-    readAllSteps()
-    
+
+    if (stepName < 1) {
+      setModalAlertStepModify(true)
+      setModalModifyStepVisible(false)
+    }
+    else {
+      await updateDoc(doc(db, "Projects", Project.key, "Steps", step.key), {
+        stepName: stepName,
+      });
+      setModalModifyStepVisible(false)
+      readAllSteps()
+    }    
   }
 
   async function modifyDescription() {
-    await updateDoc(doc(db, "Projects", Project.key), {
-      projectDescription: modProjDesc,
-    });
-    setModalModifyDescriptionVisible(false)
-    setProjectDescription(modProjDesc)
+    if (modProjDesc < 1) {
+      setModalAlertDesc(true)
+      setModalModifyDescriptionVisible(false)
+    }
+    else {
+      await updateDoc(doc(db, "Projects", Project.key), {
+        projectDescription: modProjDesc,
+      });
+      setModalModifyDescriptionVisible(false)
+      setProjectDescription(modProjDesc)
+    }
   }
 
   const deleteAlert = (item) =>
@@ -136,19 +158,17 @@ const CompleteProjectScreen = () => {
     readAllSteps()
   }
 
-  const [colorCheck, setColorCheck] = useState('#f0f0f5')
+  
   async function checkStep(item) {
       if (item.isChecked == false) {
         await updateDoc(doc(db, "Projects", Project.key, "Steps", item.key), {
           isChecked: true,
         });
-        setColorCheck("green")
       }
       if (item.isChecked == true) {
         await updateDoc(doc(db, "Projects", Project.key, "Steps", item.key), {
           isChecked: false,
         });
-        setColorCheck("#f0f0f5")
       }
       readAllSteps()
   }
@@ -171,7 +191,7 @@ const CompleteProjectScreen = () => {
 
       {/* Modal to add a new step to an existing project */}
       <Modal style={styles.modalContainer}
-      animationType="slide"
+      animationType="none"
       transparent={true}
       visible={modalAddStepVisible}
       >
@@ -208,7 +228,7 @@ const CompleteProjectScreen = () => {
 
       {/* Modal modify a step */}
       <Modal style={styles.modalContainer}
-      animationType="slide"
+      animationType="none"
       transparent={true}
       visible={modalModifyStepVisible}
       >
@@ -245,7 +265,7 @@ const CompleteProjectScreen = () => {
 
       {/* Modal modify the project description */}
       <Modal style={styles.modalContainer}
-      animationType="slide"
+      animationType="none"
       transparent={true}
       visible={modalModifyDescriptionVisible}
       >
@@ -280,6 +300,72 @@ const CompleteProjectScreen = () => {
             </View>
           </View>
 
+      </Modal>
+
+      {/* Modal alert add new step name */}
+      <Modal style={styles.modalContainer}
+      animationType="none"
+      transparent={true}
+      visible={modalAlertStep}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalView}>
+            <Text style={styles.Title}>Warning</Text>
+            <Text>Step name cannot be empty!</Text>
+            <View style={styles.btnModalContainer}>
+              <TouchableOpacity
+              style={styles.btnModal}
+              onPress={() => [setModalAlertStep(false), setModalAddStepVisible(true)]}
+              >
+                <Text>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal alert modify step name */}
+      <Modal style={styles.modalContainer}
+      animationType="none"
+      transparent={true}
+      visible={modalAlertStepModify}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalView}>
+            <Text style={styles.Title}>Warning</Text>
+            <Text>Step name cannot be empty!</Text>
+            <View style={styles.btnModalContainer}>
+              <TouchableOpacity
+              style={styles.btnModal}
+              onPress={() => [setModalAlertStepModify(false), setModalModifyStepVisible(true)]}
+              >
+                <Text>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal ALert project DESCRIPTION */}
+      <Modal style={styles.modalContainer}
+      animationType="none"
+      transparent={true}
+      visible={modalAlertDesc}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalView}>
+            <Text style={styles.Title}>Warning</Text>
+            <Text>Project description cannot be empty!</Text>
+            <View style={styles.btnModalContainer}>
+              <TouchableOpacity
+              style={styles.btnModal}
+              onPress={() => [setModalAlertDesc(false), setModalModifyDescriptionVisible(true)]}
+              >
+                <Text>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </Modal>
 
       {/* Project Complete View */}
@@ -322,7 +408,7 @@ const CompleteProjectScreen = () => {
                         <View style={styles.specHeader}>
                             <Text style={styles.Title}>Description</Text>
                             <TouchableOpacity
-                            onPress={() => [setModalModifyDescriptionVisible(true), setModProjDesc(Project.projectDescription)]}
+                            onPress={() => [setModalModifyDescriptionVisible(true), setModProjDesc(projectDescription)]}
                             >
                                 <Ionicons name="ios-create-outline" size={25}/>
                             </TouchableOpacity>
@@ -350,7 +436,7 @@ const CompleteProjectScreen = () => {
                                 containerStyle={{
                                 padding: 10,
                                 marginVertical: 5,
-                                backgroundColor: colorCheck,
+                                backgroundColor: item.isChecked ?  'green' : '#f0f0f5',
                                 borderRadius:10,
                                 }}
                                 

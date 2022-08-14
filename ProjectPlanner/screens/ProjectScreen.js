@@ -432,6 +432,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
   },
+  Title: {
+    marginBottom: 10,
+    fontSize: 20,
+    color: '#333',
+  },
 
   // Modal content project creation
   modal: {
