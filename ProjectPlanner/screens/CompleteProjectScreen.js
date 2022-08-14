@@ -38,8 +38,6 @@ const CompleteProjectScreen = () => {
 
   // STEP VALUES
   const [stepName, setStepName] = useState('')
-  const [stepStatus, setStepStatus] = useState('')
-  const [stepDeadline, setStepDeadline] = useState(new Date())
 
   const [step, setStep] = useState({})
 
@@ -82,7 +80,6 @@ const CompleteProjectScreen = () => {
     setModalAddStepVisible(false)
     const newStep = await addDoc(collection(db, "Projects", Project.key, "Steps"), {
       stepName: stepName,
-      // stepStatus: "Not Done",
       stepDeadline: "stepDeadline",
       isChecked: false,
     });
@@ -162,35 +159,34 @@ const CompleteProjectScreen = () => {
   async function progressionCount() {
     const getCheckedSteps = query(collection(db, "Projects", Project.key, "Steps"), where("isChecked", "==", true));
     const checkedStepsResult = await getDocs(getCheckedSteps);
-
     const getSteps = await getDocs(collection(db, "Projects", Project.key, "Steps"))
-
-    if (getSteps.size == 0) {
-
-    }
+    if (getSteps.size == 0) {}
     else {
       setPercentSteps(Number((checkedStepsResult.size/getSteps.size).toFixed(2)))
+      await updateDoc(doc(db, "Projects", Project.key), {
+        projectCompletion: Math.round((checkedStepsResult.size/getSteps.size)*100),
+      });
     }   
   }
 
-  const renderStep = ({ item }) => (
+  // const renderStep = ({ item }) => (
     
-    <TouchableOpacity style={{
-    elevation: 2,
-    backgroundColor: '#f0f0f5',
-    marginVertical: 10,
-    padding: 15,
-    color: "black",
-    borderRadius: 25,
-    }}
-    onPress={() => checkStep(item)}
-    onLongPress={() => deleteAlert(item)}
-    >
-        <Text>
-            {item.stepName}
-        </Text>
-    </TouchableOpacity> 
-  )
+  //   <TouchableOpacity style={{
+  //   elevation: 2,
+  //   backgroundColor: '#f0f0f5',
+  //   marginVertical: 10,
+  //   padding: 15,
+  //   color: "black",
+  //   borderRadius: 25,
+  //   }}
+  //   onPress={() => checkStep(item)}
+  //   onLongPress={() => deleteAlert(item)}
+  //   >
+  //       <Text>
+  //           {item.stepName}
+  //       </Text>
+  //   </TouchableOpacity> 
+  // )
 
     return (
         <View style={styles.container}>
@@ -376,33 +372,14 @@ const CompleteProjectScreen = () => {
                             /> */}
                             {
                               allSteps.map((item) => ( 
-                                <ListItem 
-                                style={{
-                                  // elevation: 2,
-                                  // backgroundColor: '#f0f0f5',
-                                  // marginVertical: 10,
-                                  // padding: 3,
-                                  // color: "black",
-                                  // borderRadius: 25,
-                                }}
+                                <ListItem
                                 containerStyle={{
-                                  paddingTop: 10,
-                                  paddingRight: 10,
-                                  paddingBottom: 10,
-                                  // marginVertical: 10,
-                                  borderBottomWidth: 10,
-                                  borderColor:"white",
-                                  backgroundColor: "#f0f0f5",
-                                  // elevation: 2,
-
-                                
-                                // borderColor:"#f0f0f5",
-                                // elevation: 2,
-                                // backgroundColor: '#f0f0f5',
-                                // marginVertical: 10,
-                                // padding: 10,
-                                // color: "black",
-                                // borderRadius: 25,
+                                paddingTop: 10,
+                                paddingRight: 10,
+                                paddingBottom: 10,
+                                borderBottomWidth: 10,
+                                borderColor:"white",
+                                backgroundColor: "#f0f0f5",
                                 }}
                                 
                                 onPress={() => checkStep(item)}
@@ -416,12 +393,6 @@ const CompleteProjectScreen = () => {
                               ))
                             }
                         </View>
-
-                    {/* COMMENTS */}
-                    {/* <View style={styles.viewComments}>
-                        <Text style={styles.projectCommentsTitle}>Comments</Text>
-                    </View> */}
-
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -481,7 +452,6 @@ const styles = StyleSheet.create({
     // Complete view of single project (modal)
     viewCompleteProject: {
       flexDirection: "column",
-      // alignSelf: "center",
     },
 
     viewProjectContent: {
@@ -529,17 +499,6 @@ const styles = StyleSheet.create({
       color: '#333',
     },
     projectDescription: {
-    },
-  
-  
-    viewComments: {
-      alignItems: "center",
-      elevation: 2,
-      backgroundColor: '#FFF',
-      marginVertical: 10,
-      padding: 15,
-      borderRadius: 25,
-    },
-  
+    }, 
   
   })
