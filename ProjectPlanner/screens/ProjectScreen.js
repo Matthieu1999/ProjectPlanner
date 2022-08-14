@@ -95,7 +95,6 @@ const ProjectScreen = () => {
 
     if (projectName.length < 1 || projectName.length > 30) {
       setModalAlertName(true)
-      setSelectedDate(date)
     }
     else if (projectDescription < 1) {
       setModalAlertDesc(true)
