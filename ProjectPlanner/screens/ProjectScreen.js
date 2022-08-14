@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import { StyleSheet, Text, View, Alert, Modal, FlatList, TextInput, SafeAreaView, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 
 import { auth, db } from '../firebase'
 import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
@@ -13,6 +13,9 @@ import {MaterialIcons, Ionicons} from '@expo/vector-icons';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
+import DatePicker from 'react-native-modern-datepicker';
+import { ScrollView } from 'react-native-gesture-handler';
+
 
 const ProjectScreen = () => {
 
@@ -23,6 +26,7 @@ const ProjectScreen = () => {
 
   // MODAL VISIBILITY STATE
   const [modalCreateVisible, setModalCreateVisible] = useState(false)
+  const [modalDateVisible, setModalDateVisible] = useState(false)
 
   // PROJECT VALUES
   const [projectName, setProjectName] = useState('')
@@ -36,7 +40,8 @@ const ProjectScreen = () => {
   const [allProjects, setAllProjects] = useState([]);
 
   // NOT USED YET
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(null)
 
 
   useEffect(() => {
@@ -45,6 +50,18 @@ const ProjectScreen = () => {
           getCurrentUser()
         }
       });
+
+      let today = new Date();
+      if (today.getMonth()+1 < 10) {
+        setDate(today.getFullYear()+'-0'+(today.getMonth()+1)+'-'+today.getDate())
+        setSelectedDate(today.getFullYear()+'-0'+(today.getMonth()+1)+'-'+today.getDate())
+      }
+      else {
+        setDate(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate())
+        setSelectedDate(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate())
+      }
+      
+
       const unsubscribe = navigation.addListener('focus', () => {
         getCurrentUser()
       });
@@ -58,7 +75,7 @@ const ProjectScreen = () => {
     }
   }
 
-  async function createProject() {
+  async function createProject(newDate) {
     let color = ""
     if(projectCategory === 'Personal') {
       color = '#cce6ff'
@@ -69,7 +86,8 @@ const ProjectScreen = () => {
     if (projectCategory === 'School') {
       color = '#e6ffe6'
     }
-    
+
+    setSelectedDate(newDate)
     const newProject = await addDoc(collection(db, "Projects"), {
       ownerId: currentUser,
       projectName: projectName,
@@ -79,7 +97,7 @@ const ProjectScreen = () => {
       projectCategoryColor: color,
       projectSteps: [],
       projectStatus: "Todo",
-      projectDeadline: "",
+      projectDeadline: selectedDate,
       projectCompletion: 0,
     });
     setModalCreateVisible(false)
@@ -118,6 +136,7 @@ const ProjectScreen = () => {
     }); 
     getCurrentUser()
   }
+
   
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -206,7 +225,15 @@ const ProjectScreen = () => {
             
             <View style={styles.elementView}>
               <Text style={styles.modalTitle}>Deadline</Text>
-              <Text style={styles.modalDatePicker}>Coming Soon</Text>
+              <TouchableOpacity style={styles.modalDatePicker}
+              onPress={() => [setModalDateVisible(true), setModalCreateVisible(false)]}
+              > 
+                <Text 
+                style={styles.modalDatePickerOpenBtn}
+                >
+                  Choose a deadline
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           
@@ -228,13 +255,50 @@ const ProjectScreen = () => {
         </View>
       </Modal>
 
+      <Modal style={styles.modalDate}
+      animationType="fade"
+      transparent={true}
+      visible={modalDateVisible}
+      >
+        <View style={styles.modalDateContent}>
+        <DatePicker
+              options={{
+                backgroundColor: 'white',
+                textHeaderColor: '#FFA25B',
+                textDefaultColor: 'black',
+                selectedTextColor: '#fff',
+                mainColor: '#F4722B',
+                textSecondaryColor: '#D6C7A1',
+                borderColor: 'rgba(122, 146, 165, 0.1)',
+                elevation: 2,
+              }}
+              minimumDate={date}
+              current={date}
+              selected={selectedDate}
+              onSelectedChange={(newDate) => setSelectedDate(newDate)}
+              mode="calendar"
+              style={{ borderRadius: 10 }}
+              />
+              <TouchableOpacity
+              style={styles.dateConfirmTouch}
+              onPress={() => [setModalDateVisible(false), setModalCreateVisible(true)]}
+              >
+                <Text style={styles.dateConfirmTxt}>
+                  Confirm Date
+                </Text>
+              </TouchableOpacity>
+        </View>
+      
+      </Modal>
+      
+
       {/* FAB button to open the create project modal */}
       <FAB style={styles.fab}
       medium
       icon="plus"
       color="white"
       theme={{ colors: { accent: '#1a75ff' } }}
-      onPress={() => setModalCreateVisible(true)}
+      onPress={() => [setModalCreateVisible(true), setSelectedDate(date)]}
       />
 
     </View>
@@ -251,12 +315,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  // Modal content project creation
-  modal: {
-
+  // Modal date picker
+  modalDate: {
+    width: "80%",
   },
-  modalFullView: {
-    width: '90%',
+  modalDateContent: {
+    width: "95%",
+    alignSelf: "center",
+    alignItems: "center",
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
@@ -270,11 +336,35 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
-  completeUpperView: {
+  dateConfirmTouch: {
+    borderWidth: 1,
+    borderRadius: 10
+    
+  },
+  dateConfirmTxt: {
+    padding: 10,
 
   },
-  elementView: {
-    
+
+  // Modal content project creation
+  modal: {
+    height: '90%',
+  },
+  modalFullView: {
+    // height: '90%',
+    width: '90%',
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 25,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
   modalTitle: {
     marginBottom: 15,
@@ -300,6 +390,12 @@ const styles = StyleSheet.create({
   modalDatePicker: {
     alignSelf: 'center',
     marginBottom: 40,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "purple",
+  },
+  modalDatePickerOpenBtn: {
+    padding: 3,
   },
   btnContainer: {
     flexDirection: 'row',
