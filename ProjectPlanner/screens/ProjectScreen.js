@@ -81,17 +81,8 @@ const ProjectScreen = () => {
 
   async function createProject() {
     let color = "white"
-    // if(projectCategory === 'Personal') {
-    //   color = 'white'
-    // } 
-    // if (projectCategory === 'Work') {
-    //   color = 'white'
-    // }
-    // if (projectCategory === 'School') {
-    //   color = 'white'
-    // }
 
-    if (projectName.length < 1 || projectName.length > 30) {
+    if (projectName.length < 1 || projectName.length > 20) {
       setModalAlertName(true)
     }
     else if (projectDescription < 1) {
@@ -338,7 +329,7 @@ const ProjectScreen = () => {
         <View style={styles.modalContent}>
           <View style={styles.modalView}>
             <Text style={styles.modalTitle}>Warning</Text>
-            <Text style={styles.message}>Project name should be at least 3 charachters and maximum 30 charachters!</Text>
+            <Text style={styles.message}>Project name should be at least 3 charachters and maximum 20 charachters!</Text>
             <View style={styles.btnModalContainer}>
               <TouchableOpacity
               style={styles.btnModal}
