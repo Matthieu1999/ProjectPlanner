@@ -82,6 +82,7 @@ const AccountScreen = () => {
         >
           <View style={styles.modalContent}>
             <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Change username</Text>
             <TextInput
             placeholder="New username..."
             onChangeText={text => setUserNameModal(text)}
@@ -93,14 +94,14 @@ const AccountScreen = () => {
               style={styles.btnModal}
               onPress={() => setModalUsernameVisible(false)}
               >
-                <Text>Cancel</Text>
+                <Text style={styles.btnText}>Cancel</Text>
               </TouchableOpacity>
               
               <TouchableOpacity
               style={styles.btnModal}
               onPress={() => updateUsername()}
               >
-                <Text>Save</Text>
+                <Text style={styles.btnText}>Save</Text>
               </TouchableOpacity>
             </View>
             </View>
@@ -141,15 +142,15 @@ const styles = StyleSheet.create({
     marginRight:10,
   },
 
-  // Email styling
-
 
   // MODAL username
   // Username input
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  inputText: {
+    backgroundColor: '#f2f3f3',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginBottom: 20,
   },
   modalContent:{
     flex: 1,
@@ -157,6 +158,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalView: {
+    width: '80%',
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
@@ -170,20 +172,28 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
-  inputText: {
-    backgroundColor: '#f2f3f3',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
   btnModalContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
   btnModal: {
-    borderWidth: 1,
+    borderWidth: 2,
     padding: 10,
+    borderRadius: 10,
+    borderColor: '#9900cc'
+  },
+  modalTitle: {
+    marginBottom: 10,
+    fontSize: 20,
+    color: '#333',
+    textAlign: 'center',
+  },
+  message: {
+    marginVertical: 20,
+    textAlign: 'center',
+  },
+  btnText: {
+    color: '#9900cc',
   },
 
 })
