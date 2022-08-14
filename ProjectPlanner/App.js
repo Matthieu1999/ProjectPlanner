@@ -10,7 +10,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { auth, app, db } from './firebase'
 
 import LoginScreen from './screens/LoginScreen';
-// import HomeScreen from './screens/HomeScreen';
+import HomeScreen from './screens/HomeScreen';
 import ProjectScreen from './screens/ProjectScreen';
 import AccountScreen from './screens/AccountScreen';
 import SettingsScreen from './screens/SettingsScreen';

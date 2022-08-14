@@ -437,7 +437,7 @@ const CompleteProjectScreen = () => {
                                 containerStyle={{
                                 padding: 10,
                                 marginVertical: 5,
-                                backgroundColor: item.isChecked ?  'green' : '#f0f0f5',
+                                backgroundColor: item.isChecked ?  '#99e699' : '#f0f0f5',
                                 borderRadius:10,
                                 }}
                                 
