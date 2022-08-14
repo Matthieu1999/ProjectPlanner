@@ -136,14 +136,14 @@ const LoginScreen = () => {
       >
         <View style={styles.modalContent}>
           <View style={styles.modalView}>
-            <Text style={styles.Title}>Warning</Text>
-            <Text>{modalMsg}</Text>
+            <Text style={styles.modalTitle}>Warning</Text>
+            <Text style={styles.message}>{modalMsg}</Text>
             <View style={styles.btnModalContainer}>
               <TouchableOpacity
               style={styles.btnModal}
               onPress={() => setModalAlert(false)}
               >
-                <Text>Ok</Text>
+                <Text style={styles.btnText}>Ok</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   buttonSignIn: {
-    backgroundColor: 'blue',
+    backgroundColor: '#9900cc',
     width: '40%',
     padding: 15,
     borderRadius: 10,
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     width: '40%',
     padding: 15,
     borderRadius: 10,
-    borderColor: 'blue',
+    borderColor: '#9900cc',
     borderWidth: 1,
     alignItems: 'center',
     marginRight: 10,
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   buttonOutline: {
     backgroundColor: 'white',
     marginTop: 5,
-    borderColor: 'blue',
+    borderColor: '#9900cc',
     borderWidth: 1,
   },
   buttonText: {
@@ -213,35 +213,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: 'blue',
+    color: '#9900cc',
     fontWeight: '700',
     fontSize: 16,
-  },
-
-  socialButtonContainer: {
-    // width: '100%',
-    marginTop: 30,
-  },
-  googleButton: {
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 50,
-    alignItems: 'center',
-    borderColor: 'grey',
-    borderWidth: 1,
-  },
-  googleButtonOutlineText: {
-    color: 'black',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-  buttonWithIcon: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  icon: {
-    fontSize: 20,
-    color: '#333',
   },
 
     // Alert modals
@@ -270,13 +244,22 @@ const styles = StyleSheet.create({
       justifyContent: 'space-evenly',
     },
     btnModal: {
-      borderWidth: 1,
+      borderWidth: 2,
       padding: 10,
+      borderRadius: 10,
+      borderColor: '#9900cc'
     },
-    Title: {
+    modalTitle: {
       marginBottom: 10,
       fontSize: 20,
       color: '#333',
+      textAlign: 'center',
     },
-
+    message: {
+      marginVertical: 20,
+      textAlign: 'center',
+    },
+    btnText: {
+      color: '#9900cc',
+    },
 })

@@ -36,7 +36,7 @@ const ProjectScreen = () => {
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
   const [projectCategory, setProjectCategory] = useState('Personal')
-  const [projectStatus, setProjectStatus] = useState('')
+  const [projectStatusColor, setProjectStatusColor] = useState('')
   const [projectCompletion, setProjectCompletion] = useState('')
   const [projectDeadline, setProjectDeadline] = useState(new Date())
 
@@ -80,18 +80,16 @@ const ProjectScreen = () => {
   }
 
   async function createProject() {
-    let color = ""
-    if(projectCategory === 'Personal') {
-      color = '#cce6ff'
-    } 
-    if (projectCategory === 'Work') {
-      color = '#ffe0cc'
-    }
-    if (projectCategory === 'School') {
-      color = '#e6ffe6'
-    }
-
-    // console.log(date)
+    let color = "white"
+    // if(projectCategory === 'Personal') {
+    //   color = 'white'
+    // } 
+    // if (projectCategory === 'Work') {
+    //   color = 'white'
+    // }
+    // if (projectCategory === 'School') {
+    //   color = 'white'
+    // }
 
     if (projectName.length < 1 || projectName.length > 30) {
       setModalAlertName(true)
@@ -150,6 +148,20 @@ const ProjectScreen = () => {
     getCurrentUser()
   }
 
+
+  let color = ""
+  function statusColor(item) {
+    if (item.projectStatus == "Todo") {
+      color="#cc0000"
+    }
+    if (item.projectStatus == "In Progress") {
+      color="#ffa64d"
+    }
+    if (item.projectStatus == "Done") {
+      color="#33cc33"
+    }
+  }
+
   
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -166,8 +178,20 @@ const ProjectScreen = () => {
         onLongPress={() => deleteAlert(item)}
         >
         <View style={styles.projectUpper}>
-          <Text>{item.projectName}</Text>
-          <Text style={styles.projectStatus}>{item.projectStatus}</Text>
+          <Text style={styles.projectNamestyle}>{item.projectName}</Text>
+          {
+            statusColor(item)
+          }
+          <Text 
+          style={{
+            paddingHorizontal: 8,
+            paddingVertical: 2,
+            borderRadius: 10,
+            color: color,
+            borderColor: color,
+            borderWidth: 2,
+            }}>{item.projectStatus}
+          </Text>
         </View>
 
         <View style={styles.projectUnder}>
@@ -193,7 +217,7 @@ const ProjectScreen = () => {
 
       {/* Modal to create a project */}
       <Modal style={styles.modal}
-      animationType="slide"
+      animationType="none"
       transparent={true}
       visible={modalCreateVisible}
       >
@@ -251,19 +275,19 @@ const ProjectScreen = () => {
           </View>
           
           
-          <View style={styles.btnContainer}>
-            <Button
-            style={styles.btn}
+          <View style={styles.btnModalContainer}>
+            <TouchableOpacity
+            style={styles.btnModal}
             onPress={() => setModalCreateVisible(false)}
             >
               <Text style={styles.btnText}>Cancel</Text>
-            </Button>
-            <Button
-            style={styles.btn}
+            </TouchableOpacity>
+            <TouchableOpacity
+            style={styles.btnModal}
             onPress={() => createProject()}
             >
               <Text style={styles.btnText}>Add Project</Text>
-            </Button>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -294,10 +318,10 @@ const ProjectScreen = () => {
               style={{ borderRadius: 10 }}
               />
               <TouchableOpacity
-              style={styles.dateConfirmTouch}
+              style={styles.btnModal}
               onPress={() => [setModalDateVisible(false), setModalCreateVisible(true)]}
               >
-                <Text style={styles.dateConfirmTxt}>
+                <Text style={styles.btnText}>
                   Confirm Date
                 </Text>
               </TouchableOpacity>
@@ -307,20 +331,20 @@ const ProjectScreen = () => {
 
       {/* Modal alert project NAME */}
       <Modal style={styles.modalContainer}
-      animationType="slide"
+      animationType="none"
       transparent={true}
       visible={modalAlertName}
       >
         <View style={styles.modalContent}>
           <View style={styles.modalView}>
-            <Text style={styles.Title}>Warning</Text>
-            <Text>Project name should be at least 3 charachters and maximum 30 charachters!</Text>
+            <Text style={styles.modalTitle}>Warning</Text>
+            <Text style={styles.message}>Project name should be at least 3 charachters and maximum 30 charachters!</Text>
             <View style={styles.btnModalContainer}>
               <TouchableOpacity
               style={styles.btnModal}
               onPress={() => setModalAlertName(false)}
               >
-                <Text>Ok</Text>
+                <Text style={styles.btnText}>Ok</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -335,14 +359,14 @@ const ProjectScreen = () => {
       >
         <View style={styles.modalContent}>
           <View style={styles.modalView}>
-            <Text style={styles.Title}>Warning</Text>
-            <Text>Project description cannot be empty!</Text>
+            <Text style={styles.modalTitle}>Warning</Text>
+            <Text style={styles.message}>Project description cannot be empty!</Text>
             <View style={styles.btnModalContainer}>
               <TouchableOpacity
               style={styles.btnModal}
               onPress={() => setModalAlertDesc(false)}
               >
-                <Text>Ok</Text>
+                <Text style={styles.btnText}>Ok</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -354,7 +378,7 @@ const ProjectScreen = () => {
       medium
       icon="plus"
       color="white"
-      theme={{ colors: { accent: '#1a75ff' } }}
+      theme={{ colors: { accent: '#9900cc' } }}
       onPress={() => [setModalCreateVisible(true), setSelectedDate(date)]}
       />
 
@@ -370,6 +394,11 @@ const styles = StyleSheet.create({
   // Page content
   container: {
     flex: 1,
+  },
+  projectNamestyle: {
+    fontSize: 18,
+    color: 'black',
+    // fontWeight: 'bold'
   },
 
   // Modal date picker
@@ -429,13 +458,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   btnModal: {
-    borderWidth: 1,
+    borderWidth: 2,
     padding: 10,
+    borderRadius: 10,
+    borderColor: '#9900cc'
   },
-  Title: {
+  modalTitle: {
     marginBottom: 10,
     fontSize: 20,
     color: '#333',
+    textAlign: 'center',
+  },
+  message: {
+    marginVertical: 20,
+    textAlign: 'center',
+  },
+  btnText: {
+    color: '#9900cc',
   },
 
   // Modal content project creation
@@ -458,11 +497,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
-  modalTitle: {
-    marginBottom: 15,
-    fontSize: 18,
-    alignSelf: 'center',
-  },
   inputText: {
   backgroundColor: '#f2f3f3',
   paddingHorizontal: 15,
@@ -482,25 +516,16 @@ const styles = StyleSheet.create({
   modalDatePicker: {
     alignSelf: 'center',
     marginBottom: 40,
-    borderWidth: 1,
     borderRadius: 10,
-    borderColor: "purple",
+    backgroundColor: '#9900cc',
+    padding: 10,
   },
   modalDatePickerOpenBtn: {
-    padding: 3,
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 16,
   },
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  btn: {
-    borderWidth: 1,
-    borderColor: 'blue',
-    margin: 10,
-  },
-  btnText: {
-    color: 'blue',
-  },
+
 
   // FAB styling
   fab: {
@@ -539,7 +564,7 @@ const styles = StyleSheet.create({
   projectStatus: {
     paddingHorizontal: 8,
     paddingVertical: 2,
-    borderRadius: 5,
+    borderRadius: 10,
     color: "#cc0000",
     borderColor: '#cc0000',
     borderWidth: 2,

@@ -65,15 +65,12 @@ const AccountScreen = () => {
           <TouchableOpacity
           onPress={() => setModalUsernameVisible(true)}
           >
-            <Ionicons name="ios-create-outline" size={15}/>
+            <Ionicons name="ios-create-outline" size={20}/>
           </TouchableOpacity>
         </View>
 
         <View style={styles.emailContainer}>
           <Text style={styles.emailText}>{email}</Text>
-          {/* <TouchableOpacity>
-            <Ionicons name="ios-create-outline" size={15}/>
-          </TouchableOpacity> */}
         </View>
       </View>
 
@@ -137,9 +134,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
+    marginBottom: 10,
   },
   usernameText: {
-    // marginRight: 10,
+    fontSize: 20,
+    marginRight:10,
   },
 
   // Email styling

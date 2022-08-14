@@ -5,8 +5,9 @@ import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawe
 
 import {Ionicons} from '@expo/vector-icons'
 
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
 import { signOut } from 'firebase/auth'
+import { addDoc, collection, query, where, getDocs, doc, updateDoc, getDoc, setDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from "firebase/auth";
 
 import { useNavigation } from '@react-navigation/native'
@@ -32,7 +33,6 @@ export function CustomDrawer(props) {
           if (user) {
             const loggedUserEmail = user.email
             setUserEmail(loggedUserEmail)
-            
           }
         });
       }, [])

@@ -4,8 +4,16 @@ import React from 'react'
 
 const FeedbackScreen = () => {
   return (
-    <View>
-      <Text>FeedbackScreen</Text>
+    <View style={{
+      flex: 1,
+      justifyContent:'center'
+    }}
+    >
+      <Text style={{
+        alignSelf:'center',
+        fontSize: 30,
+        width: '50%',
+      }}>No feedback needed yet!</Text>
     </View>
   )
 }

@@ -178,12 +178,32 @@ const CompleteProjectScreen = () => {
     const getCheckedSteps = query(collection(db, "Projects", Project.key, "Steps"), where("isChecked", "==", true));
     const checkedStepsResult = await getDocs(getCheckedSteps);
     const getSteps = await getDocs(collection(db, "Projects", Project.key, "Steps"))
-    if (getSteps.size == 0) {}
+    if (getSteps.size == 0) {
+
+    }
     else {
       setPercentSteps(Number((checkedStepsResult.size/getSteps.size).toFixed(2)))
       await updateDoc(doc(db, "Projects", Project.key), {
         projectCompletion: Math.round((checkedStepsResult.size/getSteps.size)*100),
       });
+
+      if (checkedStepsResult.size > 0 && checkedStepsResult.size < getSteps.size) {
+        await updateDoc(doc(db, "Projects", Project.key), {
+          projectStatus: "In Progress"
+        });
+      }
+      else if (checkedStepsResult.size === getSteps.size) {
+        await updateDoc(doc(db, "Projects", Project.key), {
+          projectStatus: "Done"
+        });
+      }
+      else {
+        await updateDoc(doc(db, "Projects", Project.key), {
+          projectStatus: "Todo"
+        });
+      }
+
+    
     }   
   }
 
@@ -199,7 +219,7 @@ const CompleteProjectScreen = () => {
 
         <View style={styles.modalContent}>
           <View style={styles.modalView}>
-            <Text style={styles.Title}>Add a new step</Text>
+            <Text style={styles.modalTitle}>Add a new step</Text>
             <TextInput
             placeholder="Step name..."
             onChangeText={text => setStepName(text)}
@@ -212,14 +232,14 @@ const CompleteProjectScreen = () => {
               style={styles.btnModal}
               onPress={() => setModalAddStepVisible(false)}
               >
-                <Text>Cancel</Text>
+                <Text style={styles.btnText}>Cancel</Text>
               </TouchableOpacity>
               
               <TouchableOpacity
               style={styles.btnModal}
               onPress={() => createStep()}
               >
-                <Text>Save</Text>
+                <Text style={styles.btnText}>Save</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -236,7 +256,7 @@ const CompleteProjectScreen = () => {
 
         <View style={styles.modalContent}>
             <View style={styles.modalView}>
-              <Text style={styles.Title}>Modify Step</Text>
+              <Text style={styles.modalTitle}>Modify Step</Text>
               <TextInput
               value={stepName}
               onChangeText={text => setStepName(text)}
@@ -249,14 +269,14 @@ const CompleteProjectScreen = () => {
                 style={styles.btnModal}
                 onPress={() => setModalModifyStepVisible(false)}
                 >
-                  <Text>Cancel</Text>
+                  <Text style={styles.btnText}>Cancel</Text>
                 </TouchableOpacity>
               
                 <TouchableOpacity
                 style={styles.btnModal}
                 onPress={() => modifyStep()}
                 >
-                  <Text>Save</Text>
+                  <Text style={styles.btnText}>Save</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -273,7 +293,7 @@ const CompleteProjectScreen = () => {
 
         <View style={styles.modalContent}>
             <View style={styles.modalView}>
-              <Text style={styles.Title}>Modify Description</Text>
+              <Text style={styles.modalTitle}>Modify Description</Text>
               <TextInput
               multiline
               numberOfLines={8}
@@ -288,14 +308,14 @@ const CompleteProjectScreen = () => {
                 style={styles.btnModal}
                 onPress={() => setModalModifyDescriptionVisible(false)}
                 >
-                  <Text>Cancel</Text>
+                  <Text style={styles.btnText}>Cancel</Text>
                 </TouchableOpacity>
               
                 <TouchableOpacity
                 style={styles.btnModal}
                 onPress={() => modifyDescription()}
                 >
-                  <Text>Save</Text>
+                  <Text style={styles.btnText}>Save</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -311,14 +331,14 @@ const CompleteProjectScreen = () => {
       >
         <View style={styles.modalContent}>
           <View style={styles.modalView}>
-            <Text style={styles.Title}>Warning</Text>
-            <Text>Step name cannot be empty!</Text>
+            <Text style={styles.modalTitle}>Warning</Text>
+            <Text  style={styles.message}>Step name cannot be empty!</Text>
             <View style={styles.btnModalContainer}>
               <TouchableOpacity
               style={styles.btnModal}
               onPress={() => [setModalAlertStep(false), setModalAddStepVisible(true)]}
               >
-                <Text>Ok</Text>
+                <Text style={styles.btnText}>Ok</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -333,14 +353,14 @@ const CompleteProjectScreen = () => {
       >
         <View style={styles.modalContent}>
           <View style={styles.modalView}>
-            <Text style={styles.Title}>Warning</Text>
-            <Text>Step name cannot be empty!</Text>
+            <Text style={styles.modalTitle}>Warning</Text>
+            <Text  style={styles.message}>Step name cannot be empty!</Text>
             <View style={styles.btnModalContainer}>
               <TouchableOpacity
               style={styles.btnModal}
               onPress={() => [setModalAlertStepModify(false), setModalModifyStepVisible(true)]}
               >
-                <Text>Ok</Text>
+                <Text style={styles.btnText}>Ok</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -355,14 +375,14 @@ const CompleteProjectScreen = () => {
       >
         <View style={styles.modalContent}>
           <View style={styles.modalView}>
-            <Text style={styles.Title}>Warning</Text>
-            <Text>Project description cannot be empty!</Text>
+            <Text style={styles.modalTitle}>Warning</Text>
+            <Text style={styles.message}>Project description cannot be empty!</Text>
             <View style={styles.btnModalContainer}>
               <TouchableOpacity
               style={styles.btnModal}
               onPress={() => [setModalAlertDesc(false), setModalModifyDescriptionVisible(true)]}
               >
-                <Text>Ok</Text>
+                <Text style={styles.btnText}>Ok</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -439,15 +459,16 @@ const CompleteProjectScreen = () => {
                                 marginVertical: 5,
                                 backgroundColor: item.isChecked ?  '#99e699' : '#f0f0f5',
                                 borderRadius:10,
+                                elevation:2,
+                                borderBottomWidth:0,
                                 }}
                                 
                                 onPress={() => checkStep(item)}
                                 onLongPress={() => deleteAlert(item)}
                                 key = {item.key}
-                                // title = {item.stepName}
                                 bottomDivider
                                 >
-                                <Text>{item.stepName}</Text>
+                                  <Text>{item.stepName}</Text>
                                 </ListItem>
                               ))
                             }
@@ -498,13 +519,28 @@ const styles = StyleSheet.create({
       borderRadius: 10,
       marginBottom: 20,
     },
+    modalTitle: {
+      marginBottom: 10,
+      fontSize: 20,
+      color: '#333',
+      textAlign: 'center',
+    },
+    message: {
+      marginVertical: 20,
+      textAlign: 'center',
+    },
     btnModalContainer: {
       flexDirection: 'row',
       justifyContent: 'space-evenly',
     },
     btnModal: {
-      borderWidth: 1,
+      borderWidth: 2,
       padding: 10,
+      borderRadius: 10,
+      borderColor: '#9900cc'
+    },
+    btnText: {
+      color: '#9900cc',
     },
   
 
@@ -536,10 +572,6 @@ const styles = StyleSheet.create({
     },
     viewDeadline: {
   
-    },
-  
-    stepList: {
-
     },
     viewElement: {
       elevation: 2,
