@@ -186,6 +186,7 @@ const ProjectScreen = () => {
         </View>
 
         <View style={styles.projectUnder}>
+          <Text style={styles.projectUnderText}>{item.projectCategory}</Text>
           <Text>{item.projectCompletion}%</Text>
         </View>
       </TouchableOpacity>
@@ -550,7 +551,11 @@ const styles = StyleSheet.create({
   projectUnder: {
     flex: 1,
     flexDirection: "row",
-    alignSelf: "flex-end",
+    justifyContent: "space-between",
+  },
+  projectUnderText: {
+    color: 'grey',
+    fontStyle: 'italic',
   },
   projectStatus: {
     paddingHorizontal: 8,
