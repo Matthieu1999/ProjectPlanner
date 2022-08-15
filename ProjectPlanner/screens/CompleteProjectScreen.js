@@ -179,7 +179,11 @@ const CompleteProjectScreen = () => {
     const checkedStepsResult = await getDocs(getCheckedSteps);
     const getSteps = await getDocs(collection(db, "Projects", Project.key, "Steps"))
     if (getSteps.size == 0) {
-
+      setPercentSteps(0)
+      await updateDoc(doc(db, "Projects", Project.key), {
+        projectCompletion: 0,
+        projectStatus: "Todo",
+      });
     }
     else {
       setPercentSteps(Number((checkedStepsResult.size/getSteps.size).toFixed(2)))
