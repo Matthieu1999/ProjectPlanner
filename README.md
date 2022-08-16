@@ -36,8 +36,10 @@ ProjectPlanner is a mobile app made mostly for students. It aims to help the use
 
 ---
 ## Basic Features
-
-
+* Firebase Authentication
+* CRUD project
+* CRUD steps inside a project
+* Create and update username
 
 ---
 ## Data structure
