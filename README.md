@@ -54,17 +54,13 @@ ProjectPlanner is a mobile app made mostly for students. It aims to help the use
     - To Do
     - In Progress
     - Done
-  - projectColor
-    - List of colors
+  - projectCategoryColor
+    - "white"
   - projectDeadline
-  - List steps
+  - Steps array
   - isDeleted
-  - Completion %
+  - projectCompletion
 - **Steps**
-  - onwerId
   - stepName
-  - stepDescription
-  - stepStatus
-  - stepOrder
+  - isChecked
   - stepDeadline
-  - isDeleted
