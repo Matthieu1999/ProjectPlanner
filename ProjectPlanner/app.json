@@ -2,7 +2,7 @@
   "expo": {
     "name": "ProjectPlanner",
     "slug": "ProjectPlanner",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -20,7 +20,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 24,
+      "versionCode": 26,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
