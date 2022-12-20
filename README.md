@@ -1,5 +1,6 @@
 # ProjectPlanner
 This is the repository of an app I made for a school project.
+[See app on Play Store](https://play.google.com/store/apps/details?id=com.olimatthdev.ProjectPlanner&hl=ln&gl=US)
 
 ---
 ## Project description
